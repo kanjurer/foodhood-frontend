@@ -13,7 +13,7 @@ export default function Cart({
   return (
     <>
       <Drawer
-        mask={false}
+        mask={true}
         title="Your Order"
         placement="right"
         closable={true}

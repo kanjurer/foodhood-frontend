@@ -30,9 +30,9 @@ export default function Sell({
         handleCancel={handleCancel}
         fetchData={fetchData}
       />
-      <Row>
+      <Row justify="center">
         {chefFoods?.map((foodItem) => (
-          <Col xs={20} sm={20} md={12} lg={8} xl={6} key={foodItem._id}>
+          <Col flex="350px" key={foodItem._id}>
             <ChefItem food={foodItem} fetchData={fetchData} />
           </Col>
         ))}

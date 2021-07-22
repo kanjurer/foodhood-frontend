@@ -14,7 +14,7 @@ export default function FoodItem({ food, fetchData }: FoodItemProps) {
     <>
       <Card
         onClick={handleChefItemPreview}
-        className="food-item"
+        style={{ margin: '10px' }}
         hoverable
         cover={<img alt="example" src="img.jpg" />}
       >

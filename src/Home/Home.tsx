@@ -8,9 +8,9 @@ export default function Home(props: HomeProps) {
 
   return (
     <>
-      <Row>
+      <Row justify="center">
         {foods?.map((foodItem) => (
-          <Col xs={20} sm={20} md={12} lg={8} xl={6} key={foodItem._id}>
+          <Col flex="350px" key={foodItem._id}>
             <FoodItem food={foodItem} handleAddToCart={handleAddToCart} />
           </Col>
         ))}

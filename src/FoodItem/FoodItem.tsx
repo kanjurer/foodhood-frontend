@@ -3,7 +3,6 @@ import { Card } from 'antd';
 import { ICartItem, IFoodItem } from '../Interfaces';
 
 import FoodItemModal from './FoodItemModal';
-import './FoodItem.css';
 
 export default function FoodItem({ food, handleAddToCart }: FoodItemProps) {
   let [visible, setVisible] = useState<boolean>(false);
@@ -17,7 +16,7 @@ export default function FoodItem({ food, handleAddToCart }: FoodItemProps) {
     <>
       <Card
         onClick={handleClick}
-        className="food-item"
+        style={{ margin: '10px' }}
         hoverable
         cover={<img alt="example" src="img.jpg" />}
       >

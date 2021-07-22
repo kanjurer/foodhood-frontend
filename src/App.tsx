@@ -75,7 +75,7 @@ export default function App() {
               handleRemoveFromCart={handleRemoveFromCart}
             />
           </Layout.Header>
-          <Layout.Content>
+          <Layout.Content className="content">
             <Switch>
               <Route path="/home" exact>
                 <Home handleAddToCart={handleAddToCart} foods={foods} />
