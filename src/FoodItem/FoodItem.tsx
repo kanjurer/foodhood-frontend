@@ -6,7 +6,6 @@ import FoodItemModal from './FoodItemModal';
 import './FoodItem.css';
 
 export default function FoodItem({ food, handleAddToCart }: FoodItemProps) {
-  console.log(food.coverPhoto);
   let [visible, setVisible] = useState<boolean>(false);
   const handleClick = () => {
     setVisible(true);
@@ -20,7 +19,7 @@ export default function FoodItem({ food, handleAddToCart }: FoodItemProps) {
         onClick={handleClick}
         className="food-item"
         hoverable
-        cover={<img alt="example" src={`media/${food.coverPhoto}`} />}
+        cover={<img alt="example" src="img.jpg" />}
       >
         <Card.Meta title={food.nameOfDish} description={food.madeByUser} />
       </Card>

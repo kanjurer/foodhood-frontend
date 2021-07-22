@@ -5,8 +5,13 @@ import { AppstoreAddOutlined } from '@ant-design/icons';
 import { ICartItem, IFoodItem } from '../Interfaces';
 import ChefItem from './ChefItem';
 import './Sell.css';
+import CreateFoodModal from './CreateFoodModal';
 
-export default function Sell({ chefFoods, handleAddToCart }: SellProps) {
+export default function Sell({
+  chefFoods,
+  handleAddToCart,
+  fetchData,
+}: SellProps) {
   let [visible, handleSell, handleCancel] = useVisible();
 
   return (
@@ -20,11 +25,15 @@ export default function Sell({ chefFoods, handleAddToCart }: SellProps) {
           icon={<AppstoreAddOutlined />}
         />
       </div>
-      <SellFoodModal visible={visible} handleCancel={handleCancel} />
+      <CreateFoodModal
+        visible={visible}
+        handleCancel={handleCancel}
+        fetchData={fetchData}
+      />
       <Row>
         {chefFoods?.map((foodItem) => (
           <Col xs={20} sm={20} md={12} lg={8} xl={6} key={foodItem._id}>
-            <ChefItem food={foodItem} handleAddToCart={handleAddToCart} />
+            <ChefItem food={foodItem} fetchData={fetchData} />
           </Col>
         ))}
       </Row>
@@ -35,6 +44,7 @@ export default function Sell({ chefFoods, handleAddToCart }: SellProps) {
 interface SellProps {
   chefFoods: IFoodItem[];
   handleAddToCart: (cartItem: ICartItem) => void;
+  fetchData: () => void;
 }
 
 function useVisible(): [boolean, () => void, () => void] {

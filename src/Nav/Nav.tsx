@@ -1,30 +1,19 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import {
-  Row,
-  Col,
-  Menu,
-  Space,
-  Button,
-  Avatar,
-  Badge,
-  Drawer,
-  Divider,
-} from 'antd';
+import { Row, Col, Menu, Space, Button, Badge, Drawer } from 'antd';
 import {
   UserOutlined,
   BellOutlined,
   MenuOutlined,
   HomeOutlined,
   MoneyCollectOutlined,
-  SettingOutlined,
   ShoppingCartOutlined,
 } from '@ant-design/icons';
 import './Nav.css';
 
 export default function Nav(props: NavProps) {
-  let [collapsed, setCollapsed] = useState<boolean>(!props.visible);
+  let [collapsed, setCollapsed] = useState<boolean>(true);
 
   return (
     <div className="nav">
@@ -89,6 +78,5 @@ export default function Nav(props: NavProps) {
 
 interface NavProps {
   handleShowCart: () => void;
-  visible: boolean;
   cartItemNumber: number | undefined;
 }

@@ -1,5 +1,4 @@
-export interface IFoodItem {
-  _id: string;
+export interface IDish {
   madeByUser: string;
   cuisine: string;
   type: 'Vegetarian' | 'Non-Vegetarian' | 'Vegan';
@@ -8,7 +7,10 @@ export interface IFoodItem {
   allergins: string;
   priceInCad: number;
   quantity: number;
-  coverPhoto: string;
+}
+
+export interface IFoodItem extends IDish {
+  _id: string;
 }
 
 export interface ICartItem extends IFoodItem {

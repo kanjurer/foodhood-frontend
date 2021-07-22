@@ -1,17 +1,19 @@
-import { useState } from 'react';
-import { Drawer, Button, Empty, Space } from 'antd';
+import { Drawer, Button, Empty } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
+
 import { ICartItem } from '../Interfaces';
 import CartItem from './CartItem';
 
-export default function Cart(props: CartProps) {
-  let { handleShowCart, visible, cart, handleRemoveFromCart } = props;
-
+export default function Cart({
+  handleShowCart,
+  visible,
+  cart,
+  handleRemoveFromCart,
+}: CartProps) {
   return (
     <>
       <Drawer
         mask={false}
-        maskClosable={true}
         title="Your Order"
         placement="right"
         closable={true}
@@ -27,7 +29,7 @@ export default function Cart(props: CartProps) {
               size="large"
               style={{ width: '200px' }}
               icon={<ShoppingCartOutlined />}
-              onClick={props.handleShowCart}
+              onClick={handleShowCart}
             >
               Checkout $ {calculateTotalOfCart(cart)}
             </Button>,
@@ -41,7 +43,7 @@ export default function Cart(props: CartProps) {
         ) : (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description="I am Hungry"
+            description="I Am Hungry"
           />
         )}
       </Drawer>
@@ -56,10 +58,10 @@ interface CartProps {
   cart: ICartItem[];
 }
 
-function calculateTotalOfCart(cart: ICartItem[]): number {
+export function calculateTotalOfCart(cart: ICartItem[]): number {
   let sum = 0;
   for (let i = 0; i < cart.length; i++) {
     sum += cart[i].buyQuantity * cart[i].priceInCad;
   }
-  return sum;
+  return Math.round(sum * 100) / 100;
 }

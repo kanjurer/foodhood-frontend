@@ -5,7 +5,7 @@ import { ICartItem, IFoodItem } from '../Interfaces';
 import SellFoodModal from './SellFoodModal';
 import ChefItemPreview from './ChefItemPreview';
 
-export default function FoodItem({ food, handleAddToCart }: FoodItemProps) {
+export default function FoodItem({ food, fetchData }: FoodItemProps) {
   let [chefItemPreviewVisible, handleChefItemPreview, cancelChefItemPreview] =
     useVisible();
   let [sellFoodModalVisible, handleSellFoodModal, cancelSellFoodModal] =
@@ -16,7 +16,7 @@ export default function FoodItem({ food, handleAddToCart }: FoodItemProps) {
         onClick={handleChefItemPreview}
         className="food-item"
         hoverable
-        cover={<img alt="example" src={`media/${food.coverPhoto}`} />}
+        cover={<img alt="example" src="img.jpg" />}
       >
         <Card.Meta title={food.nameOfDish} description={food.madeByUser} />
       </Card>
@@ -24,6 +24,7 @@ export default function FoodItem({ food, handleAddToCart }: FoodItemProps) {
       <SellFoodModal
         visible={sellFoodModalVisible}
         handleCancel={cancelSellFoodModal}
+        fetchData={fetchData}
         dish={food}
       />
       <ChefItemPreview
@@ -38,7 +39,7 @@ export default function FoodItem({ food, handleAddToCart }: FoodItemProps) {
 
 interface FoodItemProps {
   food: IFoodItem;
-  handleAddToCart: (cartItem: ICartItem) => void;
+  fetchData: () => void;
 }
 function useVisible(): [boolean, () => void, () => void] {
   let [visible, setVisible] = useState<boolean>(false);

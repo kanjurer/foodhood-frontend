@@ -1,9 +1,7 @@
-import { useState } from 'react';
-
-import { Modal, Button, InputNumber, Typography, Tag, Space } from 'antd';
+import { Modal, Button, Typography, Tag, Space } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 
-import { ICartItem, IFoodItem } from '../Interfaces';
+import { IFoodItem } from '../Interfaces';
 
 export default function FoodItemModal(props: FoodItemModalProps) {
   let { visible, handleCancel, food, handleSellFoodModal } = props;
@@ -41,7 +39,7 @@ export default function FoodItemModal(props: FoodItemModalProps) {
           />,
         ]}
       >
-        <img style={{ width: '450px' }} src={`media/${food.coverPhoto}`} />
+        <img alt="cover" style={{ width: '450px' }} src="img.jpg" />
         <Typography.Title level={5}>Ingredients:</Typography.Title>
         {food.ingredients}
         <br />

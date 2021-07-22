@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { Row, Col, Skeleton } from 'antd';
+import { Row, Col } from 'antd';
 
 import { ICartItem, IFoodItem } from '../Interfaces';
 import FoodItem from '../FoodItem/FoodItem';

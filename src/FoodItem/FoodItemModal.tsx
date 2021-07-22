@@ -1,6 +1,14 @@
 import { useState } from 'react';
 
-import { Modal, Button, InputNumber, Typography, Tag, Space } from 'antd';
+import {
+  Modal,
+  Button,
+  InputNumber,
+  Typography,
+  Tag,
+  Space,
+  Descriptions,
+} from 'antd';
 import {
   ShoppingCartOutlined,
   MinusCircleOutlined,
@@ -47,7 +55,7 @@ export default function FoodItemModal(props: FoodItemModalProps) {
             <Space size={40}>
               <h2>{food.nameOfDish} </h2>
               <h1>{tags}</h1>
-            </Space>{' '}
+            </Space>
             <br />
             <Typography.Text type="secondary">
               By {food.madeByUser}
@@ -90,14 +98,24 @@ export default function FoodItemModal(props: FoodItemModalProps) {
           </Button>,
         ]}
       >
-        <img style={{ width: '450px' }} src={`media/${food.coverPhoto}`} />
-        <Typography.Title level={5}>Ingredients:</Typography.Title>
-        {food.ingredients}
-        <br />
-        <br />
+        <img alt="cover" style={{ width: '450px' }} src="img.jpg" />
 
-        <Typography.Title level={5}>Allergins:</Typography.Title>
-        {food.allergins}
+        <Descriptions bordered title="General Information" size="small">
+          <Descriptions.Item
+            label="Ingredients"
+            labelStyle={{ fontWeight: 'bold' }}
+            key="ingredients"
+          >
+            {food.ingredients}
+          </Descriptions.Item>
+          <Descriptions.Item
+            label="Allergins"
+            labelStyle={{ fontWeight: 'bold' }}
+            key="allergins"
+          >
+            {food.allergins}
+          </Descriptions.Item>
+        </Descriptions>
       </Modal>
     </>
   );
@@ -121,7 +139,11 @@ function generateTags(food: IFoodItem) {
   }
 
   return [
-    <Tag color={typeColor}>{food.type}</Tag>,
-    <Tag color="magenta">{food.cuisine}</Tag>,
+    <Tag key="type" color={typeColor}>
+      {food.type}
+    </Tag>,
+    <Tag key="cuisine" color="magenta">
+      {food.cuisine}
+    </Tag>,
   ];
 }

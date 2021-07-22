@@ -1,30 +1,30 @@
+import './App.css';
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Layout } from 'antd';
-import { ICartItem, IFoodItem } from './Interfaces';
 
+import { ICartItem, IFoodItem } from './Interfaces';
 import Nav from './Nav/Nav';
 import Home from './Home/Home';
 import Sell from './Sell/Sell';
 import Cart from './Cart/Cart';
-import './App.css';
 
 export default function App() {
   let [foods, setFoods] = useState<IFoodItem[]>([]);
-  const fetchFoods = async function () {
+  let [cart, setCart] = useState<ICartItem[]>([]);
+  let [showCart, setShowCart] = useState<boolean>(false);
+
+  async function fetchData() {
     const response = await fetch('http://localhost:3001/foodItems', {
       method: 'GET',
     });
-    const foodItems = await response.json();
-    setFoods(foodItems);
-  };
+    const data = await response.json();
+    setFoods(data);
+  }
 
   useEffect(() => {
-    setTimeout(() => fetchFoods(), 1000);
+    fetchData();
   }, []);
-
-  let [cart, setCart] = useState<ICartItem[]>([]);
-  let [showCart, setShowCart] = useState<boolean>(false);
 
   const handleRemoveFromCart = (cartItem: ICartItem): void => {
     const cartCopy = cart.map((obj) => {
@@ -32,9 +32,9 @@ export default function App() {
     });
 
     let newCartCopy = cartCopy.filter((obj) => obj._id !== cartItem._id);
-
     setCart(newCartCopy);
   };
+
   const handleShowCart = (): void => {
     setShowCart(!showCart);
   };
@@ -65,7 +65,6 @@ export default function App() {
           <Layout.Header>
             <Nav
               cartItemNumber={cart?.length}
-              visible={showCart}
               handleShowCart={handleShowCart}
             />
 
@@ -85,6 +84,7 @@ export default function App() {
                 <Sell
                   chefFoods={chefFoods(foods)}
                   handleAddToCart={handleAddToCart}
+                  fetchData={fetchData}
                 />
               </Route>
             </Switch>

@@ -5,35 +5,28 @@ import { Modal, Button, Form, Input, Select } from 'antd';
 import { IDish, IFoodItem } from '../Interfaces';
 
 export default function SellFoodModal(props: SellFoodModalProps) {
-  let [dish, handleChange] = useForm<IFoodItem>(props.dish);
+  let [dish, handleChange] = useForm<IDish>({
+    madeByUser: 'kanjurer',
+    cuisine: '',
+    type: 'Vegetarian',
+    nameOfDish: '',
+    ingredients: '',
+    allergins: '',
+    priceInCad: 0,
+    quantity: 0,
+  });
   let { visible, handleCancel, fetchData } = props;
 
-  const handlePut = () => {
-    fetch(
-      `http://localhost:3001/foodItems/${dish.madeByUser}/foodPosts/${dish._id}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: JSON.stringify(dish),
-      }
-    ).then(() => fetchData());
+  const handlePost = () => {
+    fetch(`http://localhost:3001/foodItems/${dish.madeByUser}/foodPosts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: JSON.stringify(dish),
+    }).then(() => fetchData());
 
     handleCancel();
-  };
-
-  const handleDelete = () => {
-    fetch(
-      `http://localhost:3001/foodItems/${dish.madeByUser}/foodPosts/${dish._id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: JSON.stringify(dish),
-      }
-    ).then(() => fetchData());
   };
 
   return (
@@ -47,10 +40,7 @@ export default function SellFoodModal(props: SellFoodModalProps) {
           <Button onClick={handleCancel} key="cancel" shape="round">
             Cancel
           </Button>,
-          <Button onClick={handleDelete} key="delete" shape="round" danger>
-            Delete
-          </Button>,
-          <Button onClick={handlePut} key="submit" shape="round">
+          <Button onClick={handlePost} key="submit" shape="round">
             Post
           </Button>,
         ]}
@@ -153,5 +143,5 @@ interface SellFoodModalProps {
   visible: boolean;
   handleCancel: () => void;
   fetchData: () => void;
-  dish: IFoodItem;
+  dish?: IFoodItem;
 }
