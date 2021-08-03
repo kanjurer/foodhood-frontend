@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Row, Col, Menu, Space, Button, Badge, Drawer } from 'antd';
+import { Row, Col, Menu, Space, Button, Badge, Drawer, Dropdown } from 'antd';
 import {
   UserOutlined,
   BellOutlined,
@@ -11,9 +11,13 @@ import {
   ShoppingCartOutlined,
 } from '@ant-design/icons';
 import './Nav.css';
+import ProfileOverlay from './ProfileOverlay';
+import { useContext } from 'react';
+import { UserContext } from '../Context';
 
 export default function Nav(props: NavProps) {
   let [collapsed, setCollapsed] = useState<boolean>(true);
+  const user = useContext(UserContext);
 
   return (
     <div className="nav">
@@ -33,7 +37,7 @@ export default function Nav(props: NavProps) {
           >
             <Menu
               mode="inline"
-              style={{ width: '230px' }}
+              style={{ width: '250px', marginLeft: '-20px' }}
               onSelect={() => setCollapsed(true)}
             >
               <Menu.Item key="home" icon={<HomeOutlined />}>
@@ -41,12 +45,6 @@ export default function Nav(props: NavProps) {
               </Menu.Item>
               <Menu.Item key="sell" icon={<MoneyCollectOutlined />}>
                 <Link to="/sell">Sell</Link>
-              </Menu.Item>
-              <Menu.Item key="groups">
-                <Link to="/groups">Groups</Link>
-              </Menu.Item>
-              <Menu.Item key="social">
-                <Link to="/social">Social</Link>
               </Menu.Item>
             </Menu>
           </Drawer>
@@ -57,7 +55,19 @@ export default function Nav(props: NavProps) {
         <Col xs={8} sm={8} md={6} lg={5} xl={4}>
           <Space>
             <Button type="text" icon={<BellOutlined />} shape="round" />
-            <Button type="text" icon={<UserOutlined />} shape="round" />
+            {user && (
+              <Dropdown
+                overlay={<ProfileOverlay user={user} />}
+                trigger={['click']}
+              >
+                <Button
+                  type="text"
+                  icon={<UserOutlined />}
+                  shape="round"
+                  href="/profile"
+                />
+              </Dropdown>
+            )}
 
             <Badge count={props.cartItemNumber}>
               <Button

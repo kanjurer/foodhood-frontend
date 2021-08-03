@@ -1,5 +1,4 @@
 export interface IDish {
-  madeByUser: string;
   cuisine: string;
   type: 'Vegetarian' | 'Non-Vegetarian' | 'Vegan';
   nameOfDish: string;
@@ -10,9 +9,18 @@ export interface IDish {
 }
 
 export interface IFoodItem extends IDish {
+  madeByUser: string;
   _id: string;
 }
 
 export interface ICartItem extends IFoodItem {
   buyQuantity: number;
+}
+
+export type Role = 'consumer' | 'chef';
+
+export interface IUser {
+  username: string;
+  nameOfUser: string;
+  role: Role;
 }

@@ -2,38 +2,46 @@ import useForm from '../useForm';
 import ImgCrop from 'antd-img-crop';
 
 import { Modal, Button, Form, Input, Select } from 'antd';
-import { IDish, IFoodItem } from '../Interfaces';
+import { IFoodItem } from '../Interfaces';
 
 export default function SellFoodModal(props: SellFoodModalProps) {
   let [dish, handleChange] = useForm<IFoodItem>(props.dish);
-  let { visible, handleCancel, fetchData } = props;
+  let { visible, handleCancel, fetchChefData } = props;
 
   const handlePut = () => {
-    fetch(
-      `http://localhost:3001/foodItems/${dish.madeByUser}/foodPosts/${dish._id}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: JSON.stringify(dish),
+    fetch(`http://localhost:3001/user/chefPosts/${dish._id}`, {
+      method: 'PUT',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: JSON.stringify(dish),
+    }).then((res) => {
+      if (res.ok) {
+        fetchChefData();
+        handleCancel();
+      } else {
+        console.log(res.status);
       }
-    ).then(() => fetchData());
-
-    handleCancel();
+    });
   };
 
   const handleDelete = () => {
-    fetch(
-      `http://localhost:3001/foodItems/${dish.madeByUser}/foodPosts/${dish._id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: JSON.stringify(dish),
+    fetch(`http://localhost:3001/user/chefPosts/${dish._id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: JSON.stringify(dish),
+    }).then((res) => {
+      if (res.ok) {
+        fetchChefData();
+        handleCancel();
+      } else {
+        console.log(res.status);
       }
-    ).then(() => fetchData());
+    });
   };
 
   return (
@@ -152,6 +160,6 @@ export default function SellFoodModal(props: SellFoodModalProps) {
 interface SellFoodModalProps {
   visible: boolean;
   handleCancel: () => void;
-  fetchData: () => void;
+  fetchChefData: () => void;
   dish: IFoodItem;
 }

@@ -23,6 +23,7 @@ export default function Cart({
         {cart.length !== 0 ? (
           [
             <Button
+              key="button"
               className="cart-button"
               type="primary"
               shape="round"
@@ -37,6 +38,7 @@ export default function Cart({
               <CartItem
                 cartItem={cartItem}
                 handleRemoveFromCart={handleRemoveFromCart}
+                key={cartItem._id}
               />
             )),
           ]

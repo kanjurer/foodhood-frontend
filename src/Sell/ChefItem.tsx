@@ -1,22 +1,26 @@
 import { useState } from 'react';
 import { Card } from 'antd';
-import { ICartItem, IFoodItem } from '../Interfaces';
+import { IFoodItem } from '../Interfaces';
 
 import SellFoodModal from './SellFoodModal';
 import ChefItemPreview from './ChefItemPreview';
 
-export default function FoodItem({ food, fetchData }: FoodItemProps) {
-  let [chefItemPreviewVisible, handleChefItemPreview, cancelChefItemPreview] =
-    useVisible();
+export default function FoodItem({ food, fetchChefData }: FoodItemProps) {
   let [sellFoodModalVisible, handleSellFoodModal, cancelSellFoodModal] =
     useVisible();
+  let [chefItemPreviewVisible, handleChefItemPreview, cancelChefItemPreview] =
+    useVisible();
+
   return (
     <>
       <Card
         onClick={handleChefItemPreview}
         style={{ margin: '10px' }}
         hoverable
-        cover={<img alt="example" src="img.jpg" />}
+        cover={
+          <img style={{ borderRadius: '20px' }} alt="example" src="img.jpg" />
+        }
+        className="card-item"
       >
         <Card.Meta title={food.nameOfDish} description={food.madeByUser} />
       </Card>
@@ -24,7 +28,7 @@ export default function FoodItem({ food, fetchData }: FoodItemProps) {
       <SellFoodModal
         visible={sellFoodModalVisible}
         handleCancel={cancelSellFoodModal}
-        fetchData={fetchData}
+        fetchChefData={fetchChefData}
         dish={food}
       />
       <ChefItemPreview
@@ -39,7 +43,7 @@ export default function FoodItem({ food, fetchData }: FoodItemProps) {
 
 interface FoodItemProps {
   food: IFoodItem;
-  fetchData: () => void;
+  fetchChefData: () => void;
 }
 function useVisible(): [boolean, () => void, () => void] {
   let [visible, setVisible] = useState<boolean>(false);

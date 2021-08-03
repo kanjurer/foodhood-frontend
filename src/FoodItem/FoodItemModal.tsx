@@ -48,6 +48,7 @@ export default function FoodItemModal(props: FoodItemModalProps) {
   return (
     <>
       <Modal
+        style={{ borderRadius: '20px' }}
         destroyOnClose={true}
         visible={visible}
         title={

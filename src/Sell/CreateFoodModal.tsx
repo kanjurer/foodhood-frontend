@@ -6,7 +6,6 @@ import { IDish, IFoodItem } from '../Interfaces';
 
 export default function SellFoodModal(props: SellFoodModalProps) {
   let [dish, handleChange] = useForm<IDish>({
-    madeByUser: 'kanjurer',
     cuisine: '',
     type: 'Vegetarian',
     nameOfDish: '',
@@ -15,16 +14,24 @@ export default function SellFoodModal(props: SellFoodModalProps) {
     priceInCad: 0,
     quantity: 0,
   });
-  let { visible, handleCancel, fetchData } = props;
+  let { visible, handleCancel, fetchChefData } = props;
 
   const handlePost = () => {
-    fetch(`http://localhost:3001/foodItems/${dish.madeByUser}/foodPosts`, {
+    fetch(`http://localhost:3001/user/chefPosts`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: JSON.stringify(dish),
-    }).then(() => fetchData());
+    }).then((res) => {
+      if (res.ok) {
+        fetchChefData();
+        handleCancel();
+      } else {
+        console.log(res.status);
+      }
+    });
 
     handleCancel();
   };
@@ -142,6 +149,6 @@ export default function SellFoodModal(props: SellFoodModalProps) {
 interface SellFoodModalProps {
   visible: boolean;
   handleCancel: () => void;
-  fetchData: () => void;
+  fetchChefData: () => void;
   dish?: IFoodItem;
 }
