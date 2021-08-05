@@ -57,7 +57,12 @@ export default function Nav(props: NavProps) {
             <Button type="text" icon={<BellOutlined />} shape="round" />
             {user && (
               <Dropdown
-                overlay={<ProfileOverlay user={user} />}
+                overlay={
+                  <ProfileOverlay
+                    logInFunction={props.logInFunction}
+                    user={user}
+                  />
+                }
                 trigger={['click']}
               >
                 <Button
@@ -89,4 +94,5 @@ export default function Nav(props: NavProps) {
 interface NavProps {
   handleShowCart: () => void;
   cartItemNumber: number | undefined;
+  logInFunction: (user: boolean) => void;
 }

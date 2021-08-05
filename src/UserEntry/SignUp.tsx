@@ -1,18 +1,19 @@
-import { Form, Input, Button, Checkbox, Typography } from 'antd';
+import './SignUp.css';
 
-import useForm from '../useForm';
+import { Button, Typography } from 'antd';
+import * as Yup from 'yup';
+import { Input, SubmitButton, Form } from 'formik-antd';
+import { Formik } from 'formik';
 
-export default function SignUp() {
-  let [values, handleChange] = useForm<SignUpState>({
-    username: '',
-    password: '',
-    role: 'consumer',
-    nameOfUser: '',
-  });
-
-  const handleSubmit = async () => {
+export default function SignUp({
+  logInFunction,
+}: {
+  logInFunction: (login: boolean) => void;
+}) {
+  const handleSubmit = async (values: SignUpState) => {
     const res = await fetch(`http://localhost:3001/signup`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -20,72 +21,47 @@ export default function SignUp() {
     });
 
     if (res.ok) {
-      const data = await res.json();
+      const data = await res.text();
       console.log(data);
+      logInFunction(true);
     } else {
       console.log(await res.text());
     }
   };
 
   return (
-    <div>
+    <div className="signup-div">
       <Typography.Title>SignUp</Typography.Title>
-      <Form
-        onFinish={handleSubmit}
-        name="basic"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        initialValues={{ remember: true }}
+
+      <Formik
+        validationSchema={SignUpSchema}
+        initialValues={{
+          username: '',
+          password: '',
+          nameOfUser: '',
+          role: 'consumer' as 'consumer',
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          handleSubmit(values);
+          setSubmitting(false);
+        }}
       >
-        <Form.Item
-          label="Name"
-          name="nameOfUser"
-          rules={[{ required: true, message: 'Please input your name!' }]}
-        >
-          <Input
-            name="nameOfUser"
-            onChange={handleChange}
-            value={values.nameOfUser}
-          />
-        </Form.Item>
-        <Form.Item
-          label="Username"
-          name="username"
-          rules={[{ required: true, message: 'Please input your username!' }]}
-        >
-          <Input
-            name="username"
-            onChange={handleChange}
-            value={values.username}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
-        >
-          <Input.Password
-            name="password"
-            onChange={handleChange}
-            value={values.password}
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{ offset: 8, span: 16 }}
-        >
-          <Checkbox>Remember me</Checkbox>
-        </Form.Item>
-
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit">
-            Submit
+        <Form>
+          <Form.Item label="Name" name="nameOfUser">
+            <Input name="nameOfUser" />
+          </Form.Item>
+          <Form.Item label="Username" name="username">
+            <Input name="username" />
+          </Form.Item>
+          <Form.Item label="Password" name="password">
+            <Input.Password name="password" />
+          </Form.Item>
+          <SubmitButton type="primary">Submit</SubmitButton>
+          <Button type="link" href="/login">
+            Already a user? Log In
           </Button>
-        </Form.Item>
-      </Form>
+        </Form>
+      </Formik>
     </div>
   );
 }
@@ -94,5 +70,20 @@ interface SignUpState {
   username: string;
   password: string;
   nameOfUser: string;
-  role: 'consumer' | 'chef';
+  role: 'consumer';
 }
+
+const SignUpSchema = Yup.object().shape({
+  nameOfUser: Yup.string()
+    .min(3, 'Too Short!')
+    .max(30, 'Too Long!')
+    .required('Required'),
+  username: Yup.string()
+    .min(3, 'Too Short!')
+    .max(14, 'Too Long!')
+    .required('Required'),
+  password: Yup.string()
+    .min(6, 'Too Short!')
+    .max(30, 'Too Long!')
+    .required('Required'),
+});

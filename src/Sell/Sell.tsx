@@ -8,15 +8,23 @@ import CreateFoodModal from './CreateFoodModal';
 import { useContext } from 'react';
 import { UserContext } from '../Context';
 
-export default function Sell() {
+export default function Sell({
+  logInFunction,
+}: {
+  logInFunction: (login: boolean) => void;
+}) {
   const user = useContext(UserContext);
   if (user?.role === 'chef') {
-    return <SellApp />;
+    return <SellApp logInFunction={logInFunction} />;
   }
   return <BecomeASeller />;
 }
 
-export function SellApp() {
+export function SellApp({
+  logInFunction,
+}: {
+  logInFunction: (login: boolean) => void;
+}) {
   let [visible, handleSell, handleCancel] = useVisible();
   let [chefFoods, setChefFoods] = useState<IFoodItem[]>([]);
 
@@ -30,6 +38,7 @@ export function SellApp() {
         const data = await response.json();
         setChefFoods(data);
       } else {
+        logInFunction(false);
         console.log(await response.text());
       }
     } catch (err) {

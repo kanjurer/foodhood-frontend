@@ -3,7 +3,7 @@ import { EditOutlined } from '@ant-design/icons';
 
 import { IFoodItem } from '../Interfaces';
 
-export default function FoodItemModal(props: FoodItemModalProps) {
+export default function ChefItemPreview(props: ChefItemPreviewProps) {
   let { visible, handleCancel, food, handleSellFoodModal } = props;
 
   const handleEdit = () => {
@@ -52,7 +52,7 @@ export default function FoodItemModal(props: FoodItemModalProps) {
   );
 }
 
-interface FoodItemModalProps {
+interface ChefItemPreviewProps {
   visible: boolean;
   handleCancel: () => void;
   food: IFoodItem;
@@ -70,7 +70,11 @@ function generateTags(food: IFoodItem) {
   }
 
   return [
-    <Tag color={typeColor}>{food.type}</Tag>,
-    <Tag color="magenta">{food.cuisine}</Tag>,
+    <Tag key="type" color={typeColor}>
+      {food.type}
+    </Tag>,
+    <Tag key="cuisine" color="magenta">
+      {food.cuisine}
+    </Tag>,
   ];
 }

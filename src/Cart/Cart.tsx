@@ -3,6 +3,7 @@ import { ShoppingCartOutlined } from '@ant-design/icons';
 
 import { ICartItem } from '../Interfaces';
 import CartItem from './CartItem';
+import { Link } from 'react-router-dom';
 
 export default function Cart({
   handleShowCart,
@@ -22,18 +23,20 @@ export default function Cart({
       >
         {cart.length !== 0 ? (
           [
-            <Button
-              key="button"
-              className="cart-button"
-              type="primary"
-              shape="round"
-              size="large"
-              style={{ width: '200px' }}
-              icon={<ShoppingCartOutlined />}
-              onClick={handleShowCart}
-            >
-              Checkout $ {calculateTotalOfCart(cart)}
-            </Button>,
+            <Link to="/checkout">
+              <Button
+                key="button"
+                className="cart-button"
+                type="primary"
+                shape="round"
+                size="large"
+                style={{ width: '200px' }}
+                icon={<ShoppingCartOutlined />}
+                onClick={handleShowCart}
+              >
+                Checkout $ {calculateTotalOfCart(cart)}
+              </Button>
+            </Link>,
             ...cart.map((cartItem) => (
               <CartItem
                 cartItem={cartItem}

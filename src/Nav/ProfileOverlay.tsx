@@ -1,7 +1,11 @@
 import { Avatar, Row, Col, Typography, Button } from 'antd';
+import { Link } from 'react-router-dom';
 import { IUser } from '../Interfaces';
 
-export default function ProfileOverlay({ user }: ProfileOverlayProps) {
+export default function ProfileOverlay({
+  user,
+  logInFunction,
+}: ProfileOverlayProps) {
   const handleLogout = async () => {
     const response = await fetch('http://localhost:3001/logout', {
       credentials: 'include',
@@ -11,6 +15,7 @@ export default function ProfileOverlay({ user }: ProfileOverlayProps) {
       const data = await response.text();
       console.log(data);
       localStorage.removeItem('user');
+      logInFunction(false);
     } else {
       console.log('Nah! Error logging out bro');
     }
@@ -39,11 +44,11 @@ export default function ProfileOverlay({ user }: ProfileOverlayProps) {
         <Col>
           <Typography.Title level={4}>{user.nameOfUser}</Typography.Title>
 
-          <Button type="link" href="/profile">
-            Profile
+          <Button type="link">
+            <Link to="/profile">Profile</Link>
           </Button>
-          <Button type="link" href="/settings">
-            Settings
+          <Button type="link">
+            <Link to="/settings">Settings</Link>
           </Button>
           <Button type="link" onClick={handleLogout}>
             Log Out
@@ -56,4 +61,5 @@ export default function ProfileOverlay({ user }: ProfileOverlayProps) {
 
 interface ProfileOverlayProps {
   user: IUser;
+  logInFunction: (login: boolean) => void;
 }

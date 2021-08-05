@@ -1,33 +1,16 @@
-import { Form, Input, Button, Typography } from 'antd';
+import './LogIn.css';
 
-import useForm from '../useForm';
+import { Button, Typography } from 'antd';
+import * as Yup from 'yup';
+import { Input, SubmitButton, Form } from 'formik-antd';
+import { Formik } from 'formik';
 
-export default function LogIn() {
-  let [values, handleChange] = useForm<LogInState>({
-    username: '',
-    password: '',
-  });
-
-  const handleUser = async () => {
-    try {
-      const response = await fetch('http://localhost:3001/users/user', {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('user', JSON.stringify(data));
-        return;
-      }
-      localStorage.removeItem('user');
-      throw await response.text();
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const handleSubmit = async () => {
+export default function LogIn({
+  logInFunction,
+}: {
+  logInFunction: (login: boolean) => void;
+}) {
+  const handleSubmit = async (values: LogInState) => {
     const res = await fetch(`http://localhost:3001/login`, {
       method: 'POST',
       credentials: 'include',
@@ -38,7 +21,7 @@ export default function LogIn() {
     });
     if (res.ok) {
       const data = await res.json();
-      handleUser();
+      logInFunction(true);
       console.log(data);
     } else {
       console.log(res.status);
@@ -46,45 +29,35 @@ export default function LogIn() {
   };
 
   return (
-    <div>
-      <Typography.Title>LogIn</Typography.Title>
-      <Form
-        onFinish={handleSubmit}
-        name="basic"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        initialValues={{ remember: true }}
+    <div className="login-div">
+      <Typography.Title>Log In</Typography.Title>
+
+      <Formik
+        validationSchema={LogInSchema}
+        initialValues={{ username: '', password: '' }}
+        onSubmit={(values, { setSubmitting }) => {
+          handleSubmit(values);
+          setSubmitting(false);
+        }}
       >
-        <Form.Item
-          label="Username"
-          name="username"
-          rules={[{ required: true, message: 'Please input your username!' }]}
-        >
-          <Input
-            name="username"
-            onChange={handleChange}
-            value={values.username}
-          />
-        </Form.Item>
+        <Form>
+          <Form.Item label="Username" name="username">
+            <Input name="username" />
+          </Form.Item>
 
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
-        >
-          <Input.Password
-            name="password"
-            onChange={handleChange}
-            value={values.password}
-          />
-        </Form.Item>
+          <Form.Item label="Password" name="password">
+            <Input.Password name="password" />
+          </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit">
+          <SubmitButton disabled={false} type="primary">
             Submit
+          </SubmitButton>
+
+          <Button type="link" href="/signup">
+            Not a user? Sign up
           </Button>
-        </Form.Item>
-      </Form>
+        </Form>
+      </Formik>
     </div>
   );
 }
@@ -93,3 +66,14 @@ interface LogInState {
   username: string;
   password: string;
 }
+
+const LogInSchema = Yup.object().shape({
+  username: Yup.string()
+    .min(3, 'Too Short!')
+    .max(14, 'Too Long!')
+    .required('Required'),
+  password: Yup.string()
+    .min(6, 'Too Short!')
+    .max(30, 'Too Long!')
+    .required('Required'),
+});
