@@ -8,7 +8,7 @@ export default function SellFoodModal(props: SellFoodModalProps) {
   let { visible, handleCancel, fetchChefData } = props;
 
   const handlePost = (values: IDish) => {
-    fetch(`http://localhost:3001/user/chefPosts`, {
+    fetch(`/user/chefPosts`, {
       method: 'POST',
       credentials: 'include',
       headers: {

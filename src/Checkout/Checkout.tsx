@@ -41,7 +41,7 @@ async function checkAvailability(cart: ICartItem[]) {
   let checkCart: ICartItem[];
 
   for (const cartItem of cart) {
-    const response = await fetch(`http://localhost:3001/foods/${cartItem._id}`);
+    const response = await fetch(`/foods/${cartItem._id}`);
     if (response.ok) {
       const data: IFoodItem = await response.json();
       const buyQty = cart.find((item) => item._id === data._id)?.buyQuantity;

@@ -34,7 +34,7 @@ export default function App() {
   async function logInFunction(login: boolean): Promise<void> {
     if (login) {
       try {
-        const response = await fetch('http://localhost:3001/users/user', {
+        const response = await fetch('/users/user', {
           method: 'GET',
           credentials: 'include',
         });
@@ -86,7 +86,7 @@ function MyApp({
 
   async function fetchData() {
     try {
-      const response = await fetch('http://localhost:3001/foods', {
+      const response = await fetch('/foods', {
         method: 'GET',
       });
       const data = await response.json();

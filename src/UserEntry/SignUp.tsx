@@ -11,7 +11,7 @@ export default function SignUp({
   logInFunction: (login: boolean) => void;
 }) {
   const handleSubmit = async (values: SignUpState) => {
-    const res = await fetch(`http://localhost:3001/signup`, {
+    const res = await fetch(`/signup`, {
       method: 'POST',
       credentials: 'include',
       headers: {

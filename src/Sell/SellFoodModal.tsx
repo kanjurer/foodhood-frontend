@@ -9,7 +9,7 @@ export default function SellFoodModal(props: SellFoodModalProps) {
   let { visible, handleCancel, fetchChefData, dish } = props;
 
   const handlePut = (food: IFoodItem) => {
-    fetch(`http://localhost:3001/user/chefPosts/${dish._id}`, {
+    fetch(`/user/chefPosts/${dish._id}`, {
       method: 'PUT',
       credentials: 'include',
       headers: {
@@ -27,7 +27,7 @@ export default function SellFoodModal(props: SellFoodModalProps) {
   };
 
   const handleDelete = () => {
-    fetch(`http://localhost:3001/user/chefPosts/${dish._id}`, {
+    fetch(`/user/chefPosts/${dish._id}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: {

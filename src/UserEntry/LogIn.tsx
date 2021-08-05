@@ -11,7 +11,7 @@ export default function LogIn({
   logInFunction: (login: boolean) => void;
 }) {
   const handleSubmit = async (values: LogInState) => {
-    const res = await fetch(`http://localhost:3001/login`, {
+    const res = await fetch(`/login`, {
       method: 'POST',
       credentials: 'include',
       headers: {

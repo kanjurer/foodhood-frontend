@@ -30,7 +30,7 @@ export function SellApp({
 
   async function fetchChefData() {
     try {
-      const response = await fetch(`http://localhost:3001/user/chefPosts`, {
+      const response = await fetch(`/user/chefPosts`, {
         method: 'GET',
         credentials: 'include',
       });

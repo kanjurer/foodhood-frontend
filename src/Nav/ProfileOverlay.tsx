@@ -7,7 +7,7 @@ export default function ProfileOverlay({
   logInFunction,
 }: ProfileOverlayProps) {
   const handleLogout = async () => {
-    const response = await fetch('http://localhost:3001/logout', {
+    const response = await fetch('/logout', {
       credentials: 'include',
     });
 
