@@ -1,12 +1,15 @@
-import { useState, useEffect } from 'react';
+import './Sell.css';
+
+import { useState, useEffect, useContext } from 'react';
 import { Button, Col, Row } from 'antd';
 import { AppstoreAddOutlined } from '@ant-design/icons';
+
+import { UserContext } from '../Context';
 import { IFoodItem } from '../Interfaces';
 import ChefItem from './ChefItem';
-import './Sell.css';
 import CreateFoodModal from './CreateFoodModal';
-import { useContext } from 'react';
-import { UserContext } from '../Context';
+import BecomeAChef from './BecomeAChef';
+import { getChefFoods } from '../FetchAPIs/FetchAPIs';
 
 export default function Sell({
   logInFunction,
@@ -17,7 +20,7 @@ export default function Sell({
   if (user?.role === 'chef') {
     return <SellApp logInFunction={logInFunction} />;
   }
-  return <BecomeASeller />;
+  return <BecomeAChef />;
 }
 
 export function SellApp({
@@ -25,25 +28,19 @@ export function SellApp({
 }: {
   logInFunction: (login: boolean) => void;
 }) {
-  let [visible, handleSell, handleCancel] = useVisible();
+  let [visible, handleShowSell, handleHide] = useVisible();
   let [chefFoods, setChefFoods] = useState<IFoodItem[]>([]);
 
   async function fetchChefData() {
-    try {
-      const response = await fetch(`/user/chefPosts`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setChefFoods(data);
-      } else {
+    getChefFoods()
+      .then((res) => {
+        console.log(res);
+        setChefFoods(res.data);
+      })
+      .catch((err) => {
         logInFunction(false);
-        console.log(await response.text());
-      }
-    } catch (err) {
-      console.log('oops');
-    }
+        console.log(err.response.data);
+      });
   }
   useEffect(() => {
     fetchChefData();
@@ -56,13 +53,13 @@ export function SellApp({
           className="add-food-button"
           size="large"
           shape="circle"
-          onClick={handleSell}
+          onClick={handleShowSell}
           icon={<AppstoreAddOutlined />}
         />
       </div>
       <CreateFoodModal
         visible={visible}
-        handleCancel={handleCancel}
+        handleHide={handleHide}
         fetchChefData={fetchChefData}
       />
       <Row justify="center">
@@ -82,16 +79,12 @@ export function SellApp({
 
 function useVisible(): [boolean, () => void, () => void] {
   let [visible, setVisible] = useState<boolean>(false);
-  const handleClick = () => {
+  const handleShow = (): void => {
     setVisible(true);
   };
-  const handleCancel = () => {
+  const handleHide = (): void => {
     setVisible(false);
   };
 
-  return [visible, handleClick, handleCancel];
-}
-
-function BecomeASeller() {
-  return <h1>become a seller today!</h1>;
+  return [visible, handleShow, handleHide];
 }

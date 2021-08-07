@@ -1,4 +1,6 @@
-import { Image, Typography, Row, Col, Tag } from 'antd';
+import * as Yup from 'yup';
+import { Image, Typography, Row, Col, Tag, Divider } from 'antd';
+import { Formik } from 'formik';
 import { IUser } from '../Interfaces';
 
 export default function Profile({ user }: ProfileProps) {
@@ -23,6 +25,11 @@ export default function Profile({ user }: ProfileProps) {
           </Typography>
         </Col>
       </Row>
+      <Divider />
+
+      <Typography.Title level={1}>Your orders</Typography.Title>
+
+      <div>orders</div>
     </div>
   );
 }

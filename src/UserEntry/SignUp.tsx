@@ -1,37 +1,43 @@
 import './SignUp.css';
 
-import { Button, Typography } from 'antd';
+import { useState } from 'react';
+import { Alert, Button, Typography } from 'antd';
 import * as Yup from 'yup';
 import { Input, SubmitButton, Form } from 'formik-antd';
 import { Formik } from 'formik';
+import { signUpUser } from '../FetchAPIs/FetchAPIs';
 
 export default function SignUp({
   logInFunction,
 }: {
   logInFunction: (login: boolean) => void;
 }) {
-  const handleSubmit = async (values: SignUpState) => {
-    const res = await fetch(`/signup`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: JSON.stringify(values),
-    });
-
-    if (res.ok) {
-      const data = await res.text();
-      console.log(data);
-      logInFunction(true);
-    } else {
-      console.log(await res.text());
-    }
+  let [error, setError] = useState<string | null>(null);
+  const handleSubmit = (values: SignUpState) => {
+    signUpUser(values)
+      .then((res) => {
+        logInFunction(true);
+        setError(null);
+      })
+      .catch((err) => {
+        setError(err.response.data);
+      });
   };
 
   return (
     <div className="signup-div">
       <Typography.Title>SignUp</Typography.Title>
+
+      {error && (
+        <Alert
+          message={error}
+          banner
+          closable
+          type="error"
+          afterClose={() => setError(null)}
+        />
+      )}
+      <br />
 
       <Formik
         validationSchema={SignUpSchema}

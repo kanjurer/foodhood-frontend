@@ -34,7 +34,7 @@ export default function FoodItemModal(props: FoodItemModalProps) {
     setQuantity(quantity + 1);
   };
   const costCalculator = (priceInCad: number): number => {
-    return priceInCad * quantity;
+    return Math.round(100 * priceInCad * quantity) / 100;
   };
 
   const onAddToCart = () => {

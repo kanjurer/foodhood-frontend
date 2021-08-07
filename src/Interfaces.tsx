@@ -1,6 +1,6 @@
 export interface IDish {
   cuisine: string;
-  type: 'Vegetarian' | 'Non-Vegetarian' | 'Vegan';
+  type: Type;
   nameOfDish: string;
   ingredients: string;
   allergins: string;
@@ -18,6 +18,8 @@ export interface ICartItem extends IFoodItem {
 }
 
 export type Role = 'consumer' | 'chef';
+
+export type Type = 'Vegetarian' | 'Non-Vegetarian' | 'Vegan';
 
 export interface IUser {
   username: string;

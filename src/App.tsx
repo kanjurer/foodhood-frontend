@@ -1,6 +1,6 @@
 import './App.less';
 
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext, Dispatch, SetStateAction } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -9,48 +9,45 @@ import {
 } from 'react-router-dom';
 import { Layout } from 'antd';
 
-import { ICartItem, IFoodItem, IUser } from './Interfaces';
 import { UserContext } from './Context';
+import { ICartItem, IFoodItem, IUser } from './Interfaces';
 import Nav from './Nav/Nav';
 import Home from './Home/Home';
 import Sell from './Sell/Sell';
-import Cart from './Cart/Cart';
 import Profile from './Profile/Profile';
 import LogIn from './UserEntry/LogIn';
 import SignUp from './UserEntry/SignUp';
 import Checkout from './Checkout/Checkout';
+import Settings from './Settings/Settings';
+import {
+  handleAddToCart,
+  handleRemoveFromCart,
+} from './CartOperations/CartOperations';
+import { getAuthenticatedUser } from './FetchAPIs/FetchAPIs';
 
-const userSetter = (): IUser | null => {
+export function userSetter(): IUser | null {
   const userString: string | null = localStorage.getItem('user');
   const user: IUser | null =
     userString === null ? null : JSON.parse(userString);
 
   return user;
-};
+}
 
 export default function App() {
   let [signedInUser, setSignedInUser] = useState<IUser | null>(userSetter());
 
-  async function logInFunction(login: boolean): Promise<void> {
+  function logInFunction(login: boolean): void {
     if (login) {
-      try {
-        const response = await fetch('/users/user', {
-          method: 'GET',
-          credentials: 'include',
+      getAuthenticatedUser()
+        .then((res) => {
+          localStorage.setItem('user', JSON.stringify(res.data));
+          setSignedInUser(res.data);
+        })
+        .catch((err) => {
+          localStorage.removeItem('user');
+          setSignedInUser(null);
+          console.log(err.response.text);
         });
-
-        if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem('user', JSON.stringify(data));
-          setSignedInUser(data);
-          return;
-        }
-        localStorage.removeItem('user');
-        setSignedInUser(null);
-        console.log(await response.text());
-      } catch (e) {
-        console.log(e);
-      }
     } else {
       localStorage.removeItem('user');
       setSignedInUser(null);
@@ -59,77 +56,31 @@ export default function App() {
 
   return (
     <UserContext.Provider value={signedInUser}>
-      <MyApp logInFunction={logInFunction} />
+      <MyApp setSignedInUser={setSignedInUser} logInFunction={logInFunction} />
     </UserContext.Provider>
   );
 }
 
 function MyApp({
   logInFunction,
+  setSignedInUser,
 }: {
-  logInFunction: (login: boolean) => Promise<void>;
+  logInFunction: (login: boolean) => void;
+  setSignedInUser: Dispatch<SetStateAction<IUser | null>>;
 }) {
   const user = useContext(UserContext);
   let loggedIn = Boolean(user);
 
-  let [foods, setFoods] = useState<IFoodItem[]>([]);
   let [cart, setCart] = useState<ICartItem[]>(
     localStorage.getItem('cart') !== null
       ? JSON.parse(localStorage.getItem('cart') as string)
       : []
   );
-  let [showCart, setShowCart] = useState<boolean>(false);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  async function fetchData() {
-    try {
-      const response = await fetch('/foods', {
-        method: 'GET',
-      });
-      const data = await response.json();
-      setFoods(data);
-    } catch {
-      console.log('Shit');
-    }
+  function changeCartCallback(cart: ICartItem[]) {
+    setCart(cart);
+    localStorage.setItem('cart', JSON.stringify(cart));
   }
-
-  const handleRemoveFromCart = (cartItem: ICartItem): void => {
-    const cartCopy = cart.map((obj) => {
-      return { ...obj };
-    });
-
-    let newCartCopy = cartCopy.filter((obj) => obj._id !== cartItem._id);
-    setCart(newCartCopy);
-    localStorage.setItem('cart', JSON.stringify(newCartCopy));
-  };
-
-  const handleShowCart = (): void => {
-    setShowCart(!showCart);
-  };
-
-  const handleAddToCart = (cartItem: ICartItem): void => {
-    const foundItem = cart.find((el) => el._id === cartItem._id);
-    if (foundItem === undefined) {
-      setCart([...cart, cartItem]);
-      localStorage.setItem('cart', JSON.stringify([...cart, cartItem]));
-      return;
-    }
-
-    let cartCopy = cart.map((obj) => {
-      return { ...obj };
-    });
-
-    const index = cartCopy.findIndex((obj) => obj._id === cartItem._id);
-    cartCopy[index] = {
-      ...cartCopy[index],
-      buyQuantity: cartCopy[index].buyQuantity + cartItem.buyQuantity,
-    };
-    setCart(cartCopy);
-    localStorage.setItem('cart', JSON.stringify(cartCopy));
-  };
 
   return (
     <>
@@ -137,15 +88,12 @@ function MyApp({
         <Layout>
           <Layout.Header>
             <Nav
+              handleRemoveFromCart={(cartItem) =>
+                handleRemoveFromCart(cart, cartItem, changeCartCallback)
+              }
+              cart={cart}
               logInFunction={logInFunction}
               cartItemNumber={cart?.length}
-              handleShowCart={handleShowCart}
-            />
-            <Cart
-              cart={cart}
-              visible={showCart}
-              handleShowCart={handleShowCart}
-              handleRemoveFromCart={handleRemoveFromCart}
             />
           </Layout.Header>
           <Layout.Content
@@ -158,11 +106,15 @@ function MyApp({
           >
             <Switch>
               <Route path="/home" exact>
-                <Home handleAddToCart={handleAddToCart} foods={foods} />
+                <Home
+                  handleAddToCart={(cartItem) =>
+                    handleAddToCart(cart, cartItem, changeCartCallback)
+                  }
+                />
               </Route>
               <Route path="/sell" exact>
                 {!loggedIn ? (
-                  <Redirect to="/login" />
+                  <Redirect to="/login" push />
                 ) : (
                   <Sell logInFunction={logInFunction} />
                 )}
@@ -191,11 +143,20 @@ function MyApp({
               <Route path="/checkout" exact>
                 {loggedIn ? (
                   <Checkout
-                    handleRemoveFromCart={handleRemoveFromCart}
+                    handleRemoveFromCart={(cartItem) =>
+                      handleRemoveFromCart(cart, cartItem, changeCartCallback)
+                    }
                     cart={cart}
                   />
                 ) : (
                   <Redirect to="/login" />
+                )}
+              </Route>
+              <Route path="/settings" exact>
+                {!loggedIn ? (
+                  <Redirect to="/login" />
+                ) : (
+                  <Settings setSignedInUser={setSignedInUser} />
                 )}
               </Route>
             </Switch>

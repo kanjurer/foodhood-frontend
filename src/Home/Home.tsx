@@ -1,10 +1,27 @@
+import { useEffect, useState } from 'react';
 import { Row, Col } from 'antd';
 
 import { ICartItem, IFoodItem } from '../Interfaces';
 import FoodItem from '../FoodItem/FoodItem';
+import { getFoods } from '../FetchAPIs/FetchAPIs';
 
 export default function Home(props: HomeProps) {
-  const { foods, handleAddToCart } = props;
+  let [foods, setFoods] = useState<IFoodItem[]>([]);
+
+  async function fetchData() {
+    getFoods()
+      .then((res) => {
+        setFoods(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  }
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const { handleAddToCart } = props;
 
   return (
     <>
@@ -22,6 +39,5 @@ export default function Home(props: HomeProps) {
 //implement checkNewFoods later
 
 interface HomeProps {
-  foods: IFoodItem[];
   handleAddToCart: (cartItem: ICartItem) => void;
 }

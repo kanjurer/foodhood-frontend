@@ -1,46 +1,36 @@
 import * as Yup from 'yup';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Space } from 'antd';
 import { Formik } from 'formik';
-import { SubmitButton, Form, Input, Select } from 'formik-antd';
+import { SubmitButton, Form, Input, Select, InputNumber } from 'formik-antd';
 
 import { IFoodItem } from '../Interfaces';
+import { deleteChefFood, updateChefFood } from '../FetchAPIs/FetchAPIs';
 
 export default function SellFoodModal(props: SellFoodModalProps) {
   let { visible, handleCancel, fetchChefData, dish } = props;
 
   const handlePut = (food: IFoodItem) => {
-    fetch(`/user/chefPosts/${dish._id}`, {
-      method: 'PUT',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: JSON.stringify(food),
-    }).then((res) => {
-      if (res.ok) {
+    updateChefFood(dish._id, food)
+      .then((res) => {
         fetchChefData();
         handleCancel();
-      } else {
-        console.log(res.status);
-      }
-    });
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
   };
 
   const handleDelete = () => {
-    fetch(`/user/chefPosts/${dish._id}`, {
-      method: 'DELETE',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    }).then((res) => {
-      if (res.ok) {
+    deleteChefFood(dish._id)
+      .then((res) => {
         fetchChefData();
         handleCancel();
-      } else {
-        console.log(res.status);
-      }
-    });
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
   };
 
   return (
@@ -55,6 +45,7 @@ export default function SellFoodModal(props: SellFoodModalProps) {
         }}
       >
         <Modal
+          footer={null}
           destroyOnClose={true}
           visible={visible}
           title="Post a Food"
@@ -73,6 +64,7 @@ export default function SellFoodModal(props: SellFoodModalProps) {
               name="cuisine"
               label="Cuisine"
               tooltip={'Tooltip with customize icon'}
+              required
             >
               <Input placeholder="Indian" name="cuisine" />
             </Form.Item>
@@ -113,26 +105,31 @@ export default function SellFoodModal(props: SellFoodModalProps) {
               label="Stock Quantity"
               tooltip={'Pick the stock number'}
             >
-              <Input type="number" placeholder="10" name="quantity" min={1} />
+              <InputNumber
+                type="number"
+                placeholder="10"
+                name="quantity"
+                min={1}
+              />
             </Form.Item>
             <Form.Item
               name="priceInCad"
               label="Set Price (CAD$) / meal"
               tooltip={'Pick the right price for your dish'}
             >
-              <Input
-                type="number"
+              <InputNumber
                 placeholder="4.95"
                 name="priceInCad"
                 min={0.99}
                 max={49.99}
-                step={1}
               />
             </Form.Item>
-            <SubmitButton name="submit">Submit</SubmitButton>
-            <Button name="delete" onClick={handleDelete}>
-              Delete
-            </Button>
+            <Space>
+              <SubmitButton name="submit">Submit</SubmitButton>
+              <Button name="delete" onClick={handleDelete}>
+                Delete
+              </Button>
+            </Space>
           </Form>
         </Modal>
       </Formik>

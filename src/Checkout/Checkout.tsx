@@ -1,6 +1,7 @@
 import { Button, Empty } from 'antd';
 import { calculateTotalOfCart } from '../Cart/Cart';
 import CartItem from '../Cart/CartItem';
+import { getFoodItem } from '../FetchAPIs/FetchAPIs';
 import { ICartItem, IFoodItem } from '../Interfaces';
 
 export default function Checkout({
@@ -41,19 +42,21 @@ async function checkAvailability(cart: ICartItem[]) {
   let checkCart: ICartItem[];
 
   for (const cartItem of cart) {
-    const response = await fetch(`/foods/${cartItem._id}`);
-    if (response.ok) {
-      const data: IFoodItem = await response.json();
-      const buyQty = cart.find((item) => item._id === data._id)?.buyQuantity;
+    getFoodItem(cartItem._id)
+      .then((res) => {
+        const buyQty = cart.find(
+          (item) => item._id === res.data._id
+        )?.buyQuantity;
 
-      if (buyQty === undefined) {
-        return 'Item is unavailable now';
-      }
-      if (buyQty > data.quantity) {
-        return 'Buy quantity is more than availability';
-      }
-    } else {
-      return 'Item is unavailable now';
-    }
+        if (buyQty === undefined) {
+          return 'Item is unavailable now';
+        }
+        if (buyQty > res.data.quantity) {
+          return 'Buy quantity is more than availability';
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
   }
 }
