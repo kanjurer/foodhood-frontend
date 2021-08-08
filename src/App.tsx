@@ -10,20 +10,20 @@ import {
 import { Layout } from 'antd';
 
 import { UserContext } from './Context';
-import { ICartItem, IFoodItem, IUser } from './Interfaces';
-import Nav from './Nav/Nav';
-import Home from './Home/Home';
-import Sell from './Sell/Sell';
-import Profile from './Profile/Profile';
-import LogIn from './UserEntry/LogIn';
-import SignUp from './UserEntry/SignUp';
-import Checkout from './Checkout/Checkout';
-import Settings from './Settings/Settings';
+import { ICartItem, IUser } from './Interfaces';
+import Nav from './components/Nav/Nav';
+import Home from './components/Home/Home';
+import Sell from './components/Sell/Sell';
+import Profile from './components/Profile/Profile';
+import LogIn from './components/UserEntry/LogIn';
+import SignUp from './components/UserEntry/SignUp';
+import Checkout from './components/Checkout/Checkout';
+import Settings from './components/Settings/Settings';
 import {
   handleAddToCart,
   handleRemoveFromCart,
-} from './CartOperations/CartOperations';
-import { getAuthenticatedUser } from './FetchAPIs/FetchAPIs';
+} from './components/CartOperations/CartOperations';
+import { getAuthenticatedUser } from './fetchAPIs/fetchAPIs';
 
 export function userSetter(): IUser | null {
   const userString: string | null = localStorage.getItem('user');
@@ -118,6 +118,9 @@ function MyApp({
                 ) : (
                   <Sell logInFunction={logInFunction} />
                 )}
+              </Route>
+              <Route path="/" exact>
+                {loggedIn ? <Redirect to="/home" /> : null}
               </Route>
               <Route path="/profile" exact>
                 {user === null ? (

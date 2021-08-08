@@ -1,7 +1,7 @@
 import './CartItem.css';
 import { Button, Row, Col, Typography } from 'antd';
 
-import { ICartItem } from '../Interfaces';
+import { ICartItem } from '../../Interfaces';
 
 export default function CartItem({
   cartItem,

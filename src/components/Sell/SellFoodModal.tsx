@@ -3,33 +3,38 @@ import { Button, Modal, Space } from 'antd';
 import { Formik } from 'formik';
 import { SubmitButton, Form, Input, Select, InputNumber } from 'formik-antd';
 
-import { IFoodItem } from '../Interfaces';
-import { deleteChefFood, updateChefFood } from '../FetchAPIs/FetchAPIs';
+import { IFoodItem } from '../../Interfaces';
+import { deleteChefFood, updateChefFood } from '../../fetchAPIs/fetchAPIs';
+import { HandleAlert } from '../../messageHandler/messageHandler';
 
-export default function SellFoodModal(props: SellFoodModalProps) {
-  let { visible, handleCancel, fetchChefData, dish } = props;
-
+export default function SellFoodModal({
+  visible,
+  handleCancel,
+  fetchChefData,
+  dish,
+  handleAlert,
+}: SellFoodModalProps) {
   const handlePut = (food: IFoodItem) => {
     updateChefFood(dish._id, food)
       .then((res) => {
+        handleAlert('success', res.data);
         fetchChefData();
         handleCancel();
-        console.log(res.data);
       })
       .catch((err) => {
-        console.log(err.response.data);
+        handleAlert('error', err.response.data);
       });
   };
 
   const handleDelete = () => {
     deleteChefFood(dish._id)
       .then((res) => {
+        handleAlert('success', res.data);
         fetchChefData();
         handleCancel();
-        console.log(res.data);
       })
       .catch((err) => {
-        console.log(err.response.data);
+        handleAlert('error', err.response.data);
       });
   };
 
@@ -142,6 +147,7 @@ interface SellFoodModalProps {
   handleCancel: () => void;
   fetchChefData: () => void;
   dish: IFoodItem;
+  handleAlert: HandleAlert;
 }
 
 const FoodSchema = Yup.object().shape({

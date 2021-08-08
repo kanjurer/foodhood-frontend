@@ -1,7 +1,7 @@
 import { Drawer, Button, Empty } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 
-import { ICartItem } from '../Interfaces';
+import { ICartItem } from '../../Interfaces';
 import CartItem from './CartItem';
 import { Link } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ export default function Cart({
       >
         {cart.length !== 0 ? (
           [
-            <Link to="/checkout">
+            <Link to="/checkout" key="button">
               <Button
                 key="button"
                 className="cart-button"

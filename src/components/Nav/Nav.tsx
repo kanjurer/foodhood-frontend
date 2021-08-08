@@ -12,10 +12,10 @@ import {
   ShoppingCartOutlined,
 } from '@ant-design/icons';
 
-import { UserContext } from '../Context';
+import { UserContext } from '../../Context';
 import ProfileOverlay from './ProfileOverlay';
 import Cart from '../Cart/Cart';
-import { ICartItem } from '../Interfaces';
+import { ICartItem } from '../../Interfaces';
 
 export default function Nav({
   cart,

@@ -1,8 +1,9 @@
-import { Button, Empty } from 'antd';
+import { Empty } from 'antd';
+
+import { ICartItem } from '../../Interfaces';
+import { getFoodItem } from '../../fetchAPIs/fetchAPIs';
 import { calculateTotalOfCart } from '../Cart/Cart';
 import CartItem from '../Cart/CartItem';
-import { getFoodItem } from '../FetchAPIs/FetchAPIs';
-import { ICartItem, IFoodItem } from '../Interfaces';
 
 export default function Checkout({
   cart,
@@ -39,8 +40,6 @@ interface CheckoutProps {
 }
 
 async function checkAvailability(cart: ICartItem[]) {
-  let checkCart: ICartItem[];
-
   for (const cartItem of cart) {
     getFoodItem(cartItem._id)
       .then((res) => {

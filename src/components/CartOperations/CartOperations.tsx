@@ -1,4 +1,4 @@
-import { ICartItem } from '../Interfaces';
+import { ICartItem } from '../../Interfaces';
 
 export function handleRemoveFromCart(
   cart: ICartItem[],

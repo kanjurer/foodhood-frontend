@@ -1,26 +1,28 @@
 import './SignUp.css';
 
-import { useState } from 'react';
-import { Alert, Button, Typography } from 'antd';
 import * as Yup from 'yup';
+import { Link } from 'react-router-dom';
+import { Button, Typography } from 'antd';
 import { Input, SubmitButton, Form } from 'formik-antd';
 import { Formik } from 'formik';
-import { signUpUser } from '../FetchAPIs/FetchAPIs';
+
+import { signUpUser } from '../../fetchAPIs/fetchAPIs';
+import { useMessageHandler } from '../../messageHandler/messageHandler';
 
 export default function SignUp({
   logInFunction,
 }: {
   logInFunction: (login: boolean) => void;
 }) {
-  let [error, setError] = useState<string | null>(null);
+  let [alert, handleAlert] = useMessageHandler();
   const handleSubmit = (values: SignUpState) => {
     signUpUser(values)
       .then((res) => {
         logInFunction(true);
-        setError(null);
+        handleAlert('success', res.data);
       })
       .catch((err) => {
-        setError(err.response.data);
+        handleAlert('error', err.response.data);
       });
   };
 
@@ -28,15 +30,7 @@ export default function SignUp({
     <div className="signup-div">
       <Typography.Title>SignUp</Typography.Title>
 
-      {error && (
-        <Alert
-          message={error}
-          banner
-          closable
-          type="error"
-          afterClose={() => setError(null)}
-        />
-      )}
+      {alert}
       <br />
 
       <Formik
@@ -63,8 +57,8 @@ export default function SignUp({
             <Input.Password name="password" />
           </Form.Item>
           <SubmitButton type="primary">Submit</SubmitButton>
-          <Button type="link" href="/login">
-            Already a user? Log In
+          <Button type="link">
+            <Link to="/login">Already a user? Log In</Link>
           </Button>
         </Form>
       </Formik>

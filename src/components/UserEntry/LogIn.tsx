@@ -1,42 +1,35 @@
 import './LogIn.css';
 
-import { useState } from 'react';
-import { Button, Typography, Alert } from 'antd';
 import * as Yup from 'yup';
+import { Link } from 'react-router-dom';
+import { Button, Typography } from 'antd';
 import { Input, SubmitButton, Form } from 'formik-antd';
 import { Formik } from 'formik';
-import { logInUser } from '../FetchAPIs/FetchAPIs';
+
+import { logInUser } from '../../fetchAPIs/fetchAPIs';
+import { useMessageHandler } from '../../messageHandler/messageHandler';
 
 export default function LogIn({
   logInFunction,
 }: {
   logInFunction: (login: boolean) => void;
 }) {
-  let [error, setError] = useState<string | null>(null);
-  console.log(error);
+  let [alert, handleAlert] = useMessageHandler();
   const handleSubmit = (values: LogInState) => {
     logInUser(values)
       .then((res) => {
         logInFunction(true);
-        setError(null);
+        handleAlert('success', res.data);
       })
       .catch((err) => {
-        setError(err.response.data);
+        handleAlert('error', err.response.data);
       });
   };
 
   return (
     <div className="login-div">
       <Typography.Title>Log In</Typography.Title>
-      {error && (
-        <Alert
-          message={error}
-          banner
-          closable
-          type="error"
-          afterClose={() => setError(null)}
-        />
-      )}
+      {alert}
       <br />
 
       <Formik
@@ -60,8 +53,8 @@ export default function LogIn({
             Submit
           </SubmitButton>
 
-          <Button type="link" href="/signup">
-            Not a user? Sign up
+          <Button type="link">
+            <Link to="/signup">Not a user? Sign up</Link>
           </Button>
         </Form>
       </Formik>

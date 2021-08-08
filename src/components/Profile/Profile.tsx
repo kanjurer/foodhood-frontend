@@ -1,7 +1,6 @@
-import * as Yup from 'yup';
 import { Image, Typography, Row, Col, Tag, Divider } from 'antd';
-import { Formik } from 'formik';
-import { IUser } from '../Interfaces';
+
+import { IUser } from '../../Interfaces';
 
 export default function Profile({ user }: ProfileProps) {
   const { username, nameOfUser, role } = user;

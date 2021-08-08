@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import { Card } from 'antd';
-import { IFoodItem } from '../Interfaces';
+import { IFoodItem } from '../../Interfaces';
 
 import SellFoodModal from './SellFoodModal';
 import ChefItemPreview from './ChefItemPreview';
+import { HandleAlert } from '../../messageHandler/messageHandler';
 
-export default function FoodItem({ food, fetchChefData }: FoodItemProps) {
+export default function FoodItem({
+  food,
+  fetchChefData,
+  handleAlert,
+}: FoodItemProps) {
   let [sellFoodModalVisible, handleSellFoodModal, cancelSellFoodModal] =
     useVisible();
   let [chefItemPreviewVisible, handleChefItemPreview, cancelChefItemPreview] =
@@ -26,6 +31,7 @@ export default function FoodItem({ food, fetchChefData }: FoodItemProps) {
       </Card>
 
       <SellFoodModal
+        handleAlert={handleAlert}
         visible={sellFoodModalVisible}
         handleCancel={cancelSellFoodModal}
         fetchChefData={fetchChefData}
@@ -44,6 +50,7 @@ export default function FoodItem({ food, fetchChefData }: FoodItemProps) {
 interface FoodItemProps {
   food: IFoodItem;
   fetchChefData: () => void;
+  handleAlert: HandleAlert;
 }
 function useVisible(): [boolean, () => void, () => void] {
   let [visible, setVisible] = useState<boolean>(false);

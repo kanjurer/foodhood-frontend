@@ -1,7 +1,7 @@
 import { Modal, Button, Typography, Tag, Space } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 
-import { IFoodItem } from '../Interfaces';
+import { IFoodItem } from '../../Interfaces';
 
 export default function ChefItemPreview(props: ChefItemPreviewProps) {
   let { visible, handleCancel, food, handleSellFoodModal } = props;

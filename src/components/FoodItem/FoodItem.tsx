@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Card } from 'antd';
-import { ICartItem, IFoodItem } from '../Interfaces';
+import { ICartItem, IFoodItem } from '../../Interfaces';
 import FoodItemModal from './FoodItemModal';
 
 import './FoodItem.css';

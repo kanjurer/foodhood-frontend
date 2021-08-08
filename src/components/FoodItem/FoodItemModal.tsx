@@ -15,7 +15,7 @@ import {
   PlusCircleOutlined,
 } from '@ant-design/icons';
 
-import { ICartItem, IFoodItem } from '../Interfaces';
+import { ICartItem, IFoodItem } from '../../Interfaces';
 import './FoodItemModal.css';
 
 export default function FoodItemModal(props: FoodItemModalProps) {

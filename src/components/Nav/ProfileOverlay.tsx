@@ -1,7 +1,7 @@
 import { Avatar, Row, Col, Typography, Button } from 'antd';
 import { Link } from 'react-router-dom';
-import { logOutUser } from '../FetchAPIs/FetchAPIs';
-import { IUser } from '../Interfaces';
+import { logOutUser } from '../../fetchAPIs/fetchAPIs';
+import { IUser } from '../../Interfaces';
 
 export default function ProfileOverlay({
   user,
@@ -10,6 +10,7 @@ export default function ProfileOverlay({
   const handleLogout = async () => {
     logOutUser()
       .then((res) => {
+        console.log(res.data);
         localStorage.removeItem('user');
         logInFunction(false);
       })

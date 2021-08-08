@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Row, Col } from 'antd';
 
-import { ICartItem, IFoodItem } from '../Interfaces';
+import { ICartItem, IFoodItem } from '../../Interfaces';
 import FoodItem from '../FoodItem/FoodItem';
-import { getFoods } from '../FetchAPIs/FetchAPIs';
+import { getFoods } from '../../fetchAPIs/fetchAPIs';
 
 export default function Home(props: HomeProps) {
   let [foods, setFoods] = useState<IFoodItem[]>([]);

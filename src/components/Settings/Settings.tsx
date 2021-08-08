@@ -3,42 +3,49 @@ import './Settings.css';
 import * as Yup from 'yup';
 import { Dispatch, SetStateAction, useContext } from 'react';
 
-import { UserContext } from '../Context';
+import { UserContext } from '../../Context';
 import { Typography, Collapse } from 'antd';
 import { Formik } from 'formik';
 import { Form, Input, SubmitButton } from 'formik-antd';
-import { IUser } from '../Interfaces';
-import { userSetter } from '../App';
-import { changeNameOfUser, changePasswordOfUser } from '../FetchAPIs/FetchAPIs';
+import { IUser } from '../../Interfaces';
+
+import {
+  changeNameOfUser,
+  changePasswordOfUser,
+} from '../../fetchAPIs/fetchAPIs';
+import { useMessageHandler } from '../../messageHandler/messageHandler';
 
 export default function Settings({
   setSignedInUser,
 }: {
   setSignedInUser: Dispatch<SetStateAction<IUser | null>>;
 }) {
+  let [alert, handleAlert] = useMessageHandler();
   const user = useContext(UserContext);
 
-  if (user === null) return <h1>Mot allowed</h1>;
+  if (user === null) return <h1>Not allowed</h1>;
 
   const handleNameOfUserPut = async (editedUserInfo: IEditedNameOfUser) => {
     changeNameOfUser(editedUserInfo)
       .then((res) => {
+        handleAlert('success', 'Your name has been updated sucessfully!');
         localStorage.setItem('user', JSON.stringify(res.data));
         setSignedInUser(res.data);
       })
       .catch((err) => {
-        console.log(err.response.data);
+        handleAlert('error', err.response.data);
       });
   };
 
   const handlePasswordPut = async (editedUserInfo: IEditedPassword) => {
     changePasswordOfUser(editedUserInfo)
       .then((res) => {
+        handleAlert('success', 'Your password has been updated sucessfully!');
         localStorage.setItem('user', JSON.stringify(res.data));
         setSignedInUser(res.data);
       })
       .catch((err) => {
-        console.log(err.response.data);
+        handleAlert('error', err.response.data);
       });
   };
 
@@ -46,6 +53,7 @@ export default function Settings({
     <>
       <div className="settings-div">
         <Typography.Title level={1}>Settings</Typography.Title>
+        {alert}
 
         <Collapse>
           <Collapse.Panel header="Edit your name" key="edit your name">
@@ -81,14 +89,14 @@ export default function Settings({
             >
               <Form layout="vertical">
                 <Form.Item name="oldPassword" label="Old Password">
-                  <Input name="oldPassword" type="password" />
+                  <Input.Password name="oldPassword" />
                 </Form.Item>
                 <Form.Item
                   name="newPassword"
                   label="New Password"
                   tooltip="Choose a strong password"
                 >
-                  <Input name="newPassword" type="password" />
+                  <Input.Password name="newPassword" />
                 </Form.Item>
                 <SubmitButton>Submit</SubmitButton>
               </Form>

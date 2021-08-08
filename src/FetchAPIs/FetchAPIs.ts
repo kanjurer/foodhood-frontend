@@ -6,7 +6,7 @@ import {
   IEditedPassword,
   LogInState,
   SignUpState,
-} from './FetchAPIsInterfaces';
+} from '../Interfaces';
 
 axios.defaults.headers['Content-Type'] = 'application/json; charset=UTF-8';
 axios.defaults.withCredentials = true;

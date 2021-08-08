@@ -4,12 +4,13 @@ import { useState, useEffect, useContext } from 'react';
 import { Button, Col, Row } from 'antd';
 import { AppstoreAddOutlined } from '@ant-design/icons';
 
-import { UserContext } from '../Context';
-import { IFoodItem } from '../Interfaces';
+import { UserContext } from '../../Context';
+import { IFoodItem } from '../../Interfaces';
 import ChefItem from './ChefItem';
 import CreateFoodModal from './CreateFoodModal';
 import BecomeAChef from './BecomeAChef';
-import { getChefFoods } from '../FetchAPIs/FetchAPIs';
+import { getChefFoods } from '../../fetchAPIs/fetchAPIs';
+import { useMessageHandler } from '../../messageHandler/messageHandler';
 
 export default function Sell({
   logInFunction,
@@ -30,11 +31,11 @@ export function SellApp({
 }) {
   let [visible, handleShowSell, handleHide] = useVisible();
   let [chefFoods, setChefFoods] = useState<IFoodItem[]>([]);
+  let [alert, handleAlert] = useMessageHandler();
 
   async function fetchChefData() {
     getChefFoods()
       .then((res) => {
-        console.log(res);
         setChefFoods(res.data);
       })
       .catch((err) => {
@@ -49,6 +50,7 @@ export function SellApp({
   return (
     <>
       <div>
+        {alert}
         <Button
           className="add-food-button"
           size="large"
@@ -59,6 +61,7 @@ export function SellApp({
       </div>
       <CreateFoodModal
         visible={visible}
+        handleAlert={handleAlert}
         handleHide={handleHide}
         fetchChefData={fetchChefData}
       />
@@ -66,6 +69,7 @@ export function SellApp({
         {chefFoods?.map((foodItem) => (
           <Col flex="350px" key={foodItem._id}>
             <ChefItem
+              handleAlert={handleAlert}
               food={foodItem}
               fetchChefData={fetchChefData}
               key={foodItem._id}

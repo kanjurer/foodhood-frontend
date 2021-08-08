@@ -2,20 +2,24 @@ import * as Yup from 'yup';
 import { Modal } from 'antd';
 import { Form, Input, InputNumber, Select, SubmitButton } from 'formik-antd';
 import { Formik } from 'formik';
-import { IDish, IFoodItem } from '../Interfaces';
-import { postChefFood } from '../FetchAPIs/FetchAPIs';
+import { IDish, IFoodItem } from '../../Interfaces';
+import { postChefFood } from '../../fetchAPIs/fetchAPIs';
 
-export default function SellFoodModal(props: SellFoodModalProps) {
-  let { visible, handleHide, fetchChefData } = props;
-
+export default function SellFoodModal({
+  visible,
+  handleHide,
+  fetchChefData,
+  handleAlert,
+}: SellFoodModalProps) {
   const handlePost = (values: IDish) => {
     postChefFood(values)
       .then((res) => {
+        handleAlert('success', res.data);
         fetchChefData();
         handleHide();
       })
       .catch((err) => {
-        console.log(err.response.data);
+        handleAlert('success', err.response.datas);
       });
   };
 
@@ -127,6 +131,7 @@ interface SellFoodModalProps {
   handleHide: () => void;
   fetchChefData: () => void;
   dish?: IFoodItem;
+  handleAlert: any;
 }
 
 const FoodSchema = Yup.object().shape({
