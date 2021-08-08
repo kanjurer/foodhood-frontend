@@ -7,14 +7,13 @@ import { Input, SubmitButton, Form } from 'formik-antd';
 import { Formik } from 'formik';
 
 import { signUpUser } from '../../fetchAPIs/fetchAPIs';
-import { useMessageHandler } from '../../messageHandler/messageHandler';
+import { handleAlert } from '../../messageHandler/messageHandler';
 
 export default function SignUp({
   logInFunction,
 }: {
   logInFunction: (login: boolean) => void;
 }) {
-  let [alert, handleAlert] = useMessageHandler();
   const handleSubmit = (values: SignUpState) => {
     signUpUser(values)
       .then((res) => {
@@ -30,7 +29,6 @@ export default function SignUp({
     <div className="signup-div">
       <Typography.Title>SignUp</Typography.Title>
 
-      {alert}
       <br />
 
       <Formik

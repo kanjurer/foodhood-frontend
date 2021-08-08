@@ -140,8 +140,8 @@ const FoodSchema = Yup.object().shape({
     .min(3, 'Too Short!')
     .max(30, 'Too Long!')
     .required('Required'),
-  ingredients: Yup.string().min(3, 'Too Short!'),
-  allergins: Yup.string().min(3, 'Too Short!').max(14, 'Too Long!'),
+  ingredients: Yup.string(),
+  allergins: Yup.string(),
   priceInCad: Yup.number()
     .min(0.99, 'Minimum price should be 0.99$')
     .max(49.99, 'Maximum price is 49.99'),

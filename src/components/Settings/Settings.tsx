@@ -13,14 +13,13 @@ import {
   changeNameOfUser,
   changePasswordOfUser,
 } from '../../fetchAPIs/fetchAPIs';
-import { useMessageHandler } from '../../messageHandler/messageHandler';
+import { handleAlert } from '../../messageHandler/messageHandler';
 
 export default function Settings({
   setSignedInUser,
 }: {
   setSignedInUser: Dispatch<SetStateAction<IUser | null>>;
 }) {
-  let [alert, handleAlert] = useMessageHandler();
   const user = useContext(UserContext);
 
   if (user === null) return <h1>Not allowed</h1>;
@@ -53,7 +52,6 @@ export default function Settings({
     <>
       <div className="settings-div">
         <Typography.Title level={1}>Settings</Typography.Title>
-        {alert}
 
         <Collapse>
           <Collapse.Panel header="Edit your name" key="edit your name">

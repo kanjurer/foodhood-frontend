@@ -10,7 +10,7 @@ import ChefItem from './ChefItem';
 import CreateFoodModal from './CreateFoodModal';
 import BecomeAChef from './BecomeAChef';
 import { getChefFoods } from '../../fetchAPIs/fetchAPIs';
-import { useMessageHandler } from '../../messageHandler/messageHandler';
+import { handleAlert } from '../../messageHandler/messageHandler';
 
 export default function Sell({
   logInFunction,
@@ -31,7 +31,6 @@ export function SellApp({
 }) {
   let [visible, handleShowSell, handleHide] = useVisible();
   let [chefFoods, setChefFoods] = useState<IFoodItem[]>([]);
-  let [alert, handleAlert] = useMessageHandler();
 
   async function fetchChefData() {
     getChefFoods()
@@ -50,7 +49,6 @@ export function SellApp({
   return (
     <>
       <div>
-        {alert}
         <Button
           className="add-food-button"
           size="large"

@@ -7,14 +7,13 @@ import { Input, SubmitButton, Form } from 'formik-antd';
 import { Formik } from 'formik';
 
 import { logInUser } from '../../fetchAPIs/fetchAPIs';
-import { useMessageHandler } from '../../messageHandler/messageHandler';
+import { handleAlert } from '../../messageHandler/messageHandler';
 
 export default function LogIn({
   logInFunction,
 }: {
   logInFunction: (login: boolean) => void;
 }) {
-  let [alert, handleAlert] = useMessageHandler();
   const handleSubmit = (values: LogInState) => {
     logInUser(values)
       .then((res) => {
@@ -29,7 +28,6 @@ export default function LogIn({
   return (
     <div className="login-div">
       <Typography.Title>Log In</Typography.Title>
-      {alert}
       <br />
 
       <Formik

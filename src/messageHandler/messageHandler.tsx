@@ -1,30 +1,15 @@
-import { Alert } from 'antd';
-import { useState } from 'react';
+import { message } from 'antd';
 
-export function useMessageHandler(): [null | JSX.Element | '', HandleAlert] {
-  let [message, setMessage] = useState<string | null>(null);
-  let [messageType, setMessageType] = useState<MessageType>(undefined);
+export const handleAlert = (type: MessageType, messageText: string): void => {
+  message[type](messageText);
+};
 
-  const handleAlert = (type: MessageType, message: string): void => {
-    setMessageType(type);
-    setMessage(message);
-  };
-  return [
-    message && (
-      <>
-        <Alert
-          message={message}
-          banner
-          closable
-          type={messageType}
-          afterClose={() => setMessage(null)}
-        />
-        <br />
-      </>
-    ),
-    handleAlert,
-  ];
-}
+type MessageType =
+  | 'error'
+  | 'success'
+  | 'info'
+  | 'warning'
+  | 'warn'
+  | 'loading';
 
-type MessageType = 'error' | 'success' | 'info' | 'warning' | undefined;
 export type HandleAlert = (type: MessageType, message: string) => void;
