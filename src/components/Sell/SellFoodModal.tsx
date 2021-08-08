@@ -1,11 +1,13 @@
 import * as Yup from 'yup';
-import { Button, Modal, Space } from 'antd';
+import { Button, Modal, Space, Upload } from 'antd';
 import { Formik } from 'formik';
 import { SubmitButton, Form, Input, Select, InputNumber } from 'formik-antd';
 
-import { IFoodItem } from '../../Interfaces';
+import { IDish, IFoodItem } from '../../Interfaces';
 import { deleteChefFood, updateChefFood } from '../../fetchAPIs/fetchAPIs';
 import { HandleAlert } from '../../messageHandler/messageHandler';
+import ImgCrop from 'antd-img-crop';
+import { useState } from 'react';
 
 export default function SellFoodModal({
   visible,
@@ -14,7 +16,16 @@ export default function SellFoodModal({
   dish,
   handleAlert,
 }: SellFoodModalProps) {
-  const handlePut = (food: IFoodItem) => {
+  let [fileList, setFileList] = useState<any>([
+    {
+      uid: '-1',
+      name: 'image.png',
+      status: 'done',
+      url: dish.coverPhoto,
+    },
+  ]);
+
+  const handlePut = (food: IDish) => {
     updateChefFood(dish._id, food)
       .then((res) => {
         handleAlert('success', res.data);
@@ -45,7 +56,7 @@ export default function SellFoodModal({
         initialValues={dish}
         onSubmit={(values, { setSubmitting }) => {
           console.log(values);
-          handlePut(values);
+          handlePut({ ...values, coverPhoto: fileList[0] });
           setSubmitting(false);
         }}
       >
@@ -128,6 +139,29 @@ export default function SellFoodModal({
                 min={0.99}
                 max={49.99}
               />
+            </Form.Item>
+            <Form.Item
+              name="coverPhoto"
+              label="Cover Photo"
+              tooltip={'Upload cover photo of your food'}
+            >
+              <ImgCrop rotate>
+                <Upload
+                  listType="picture-card"
+                  name="coverPhoto"
+                  fileList={fileList}
+                  showUploadList={true}
+                  onRemove={() => {
+                    setFileList([]);
+                  }}
+                  beforeUpload={(file) => {
+                    setFileList([file]);
+                    return false;
+                  }}
+                >
+                  {fileList.length === 0 && '+ Upload'}
+                </Upload>
+              </ImgCrop>
             </Form.Item>
             <Space>
               <SubmitButton name="submit">Submit</SubmitButton>

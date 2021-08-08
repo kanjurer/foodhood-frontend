@@ -1,9 +1,11 @@
 import * as Yup from 'yup';
-import { Modal } from 'antd';
+import ImgCrop from 'antd-img-crop';
+import { Modal, Upload } from 'antd';
 import { Form, Input, InputNumber, Select, SubmitButton } from 'formik-antd';
 import { Formik } from 'formik';
 import { IDish, IFoodItem } from '../../Interfaces';
 import { postChefFood } from '../../fetchAPIs/fetchAPIs';
+import { useState } from 'react';
 
 export default function SellFoodModal({
   visible,
@@ -19,10 +21,11 @@ export default function SellFoodModal({
         handleHide();
       })
       .catch((err) => {
-        handleAlert('success', err.response.datas);
+        handleAlert('error', err.response.data);
       });
   };
 
+  let [fileList, setFileList] = useState<any>([]);
   return (
     <>
       <Formik
@@ -38,7 +41,7 @@ export default function SellFoodModal({
         }}
         onSubmit={(values, { setSubmitting }) => {
           console.log(values);
-          handlePost(values);
+          handlePost({ ...values, coverPhoto: fileList[0] });
           setSubmitting(false);
         }}
       >
@@ -117,6 +120,28 @@ export default function SellFoodModal({
                 min={0.99}
                 max={49.99}
               />
+            </Form.Item>
+            <Form.Item
+              name="coverPhoto"
+              label="Cover Photo"
+              tooltip={'Upload cover photo of your food'}
+            >
+              <ImgCrop rotate>
+                <Upload
+                  listType="picture-card"
+                  name="coverPhoto"
+                  fileList={fileList}
+                  onRemove={() => {
+                    setFileList([]);
+                  }}
+                  beforeUpload={(file, fileList) => {
+                    setFileList(fileList);
+                    return false;
+                  }}
+                >
+                  {fileList.length === 0 && '+ Upload'}
+                </Upload>
+              </ImgCrop>
             </Form.Item>
             <SubmitButton>Submit</SubmitButton>,
           </Form>

@@ -99,7 +99,11 @@ export default function FoodItemModal(props: FoodItemModalProps) {
           </Button>,
         ]}
       >
-        <img alt="cover" style={{ width: '450px' }} src="img.jpg" />
+        <img
+          alt="cover"
+          style={{ width: '450px' }}
+          src={props.food.coverPhoto}
+        />
 
         <Descriptions bordered title="General Information" size="small">
           <Descriptions.Item

@@ -39,7 +39,7 @@ export default function ChefItemPreview(props: ChefItemPreviewProps) {
           />,
         ]}
       >
-        <img alt="cover" style={{ width: '450px' }} src="img.jpg" />
+        <img alt="cover" style={{ width: '450px' }} src={food.coverPhoto} />
         <Typography.Title level={5}>Ingredients:</Typography.Title>
         {food.ingredients}
         <br />

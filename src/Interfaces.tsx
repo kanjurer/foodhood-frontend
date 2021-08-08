@@ -1,4 +1,5 @@
 export interface IDish {
+  coverPhoto: any;
   cuisine: string;
   type: Type;
   nameOfDish: string;

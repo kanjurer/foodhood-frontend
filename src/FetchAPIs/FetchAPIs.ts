@@ -63,10 +63,19 @@ export async function getChefFoods() {
 }
 
 export async function postChefFood(dish: IDish) {
+  const form = new FormData();
+  Object.keys(dish).forEach((key) => {
+    form.append(key, (dish as any)[key]);
+  });
+
   return await axios({
     url: `/chefPosts`,
     method: 'POST',
-    data: dish,
+    data: form,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      credentials: 'include',
+    },
   });
 }
 
@@ -77,11 +86,20 @@ export async function deleteChefFood(id: string) {
   });
 }
 
-export async function updateChefFood(id: string, food: IFoodItem) {
+export async function updateChefFood(id: string, food: IDish) {
+  const form = new FormData();
+  Object.keys(food).forEach((key) => {
+    form.append(key, (food as any)[key]);
+  });
+
   return await axios({
     url: `/chefPosts/${id}`,
     method: 'PUT',
-    data: food,
+    data: form,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      credentials: 'include',
+    },
   });
 }
 

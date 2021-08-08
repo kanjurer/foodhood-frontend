@@ -19,7 +19,13 @@ export default function FoodItem({ food, handleAddToCart }: FoodItemProps) {
         onClick={handleClick}
         className="card-item"
         hoverable
-        cover={<img alt="example" src="img.jpg" />}
+        cover={
+          <img
+            alt="example"
+            src={food.coverPhoto}
+            style={{ width: '350px', height: '200px' }}
+          />
+        }
       >
         <Card.Meta title={food.nameOfDish} description={food.madeByUser} />
       </Card>

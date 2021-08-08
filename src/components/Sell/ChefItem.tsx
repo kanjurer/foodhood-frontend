@@ -23,7 +23,11 @@ export default function FoodItem({
         style={{ margin: '10px' }}
         hoverable
         cover={
-          <img style={{ borderRadius: '20px' }} alt="example" src="img.jpg" />
+          <img
+            alt="example"
+            src={food.coverPhoto}
+            style={{ width: '350px', height: '200px' }}
+          />
         }
         className="card-item"
       >
