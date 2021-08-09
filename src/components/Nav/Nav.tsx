@@ -2,7 +2,17 @@ import './Nav.css';
 
 import { useState, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Row, Col, Menu, Space, Button, Badge, Drawer, Dropdown } from 'antd';
+import {
+  Row,
+  Col,
+  Menu,
+  Space,
+  Button,
+  Badge,
+  Drawer,
+  Dropdown,
+  Input,
+} from 'antd';
 import {
   UserOutlined,
   BellOutlined,
@@ -10,12 +20,14 @@ import {
   HomeOutlined,
   MoneyCollectOutlined,
   ShoppingCartOutlined,
+  LoginOutlined,
 } from '@ant-design/icons';
 
 import { UserContext } from '../../Context';
 import ProfileOverlay from './ProfileOverlay';
 import Cart from '../Cart/Cart';
 import { ICartItem } from '../../Interfaces';
+import SearchBar from './SearchBar';
 
 export default function Nav({
   cart,
@@ -60,11 +72,18 @@ export default function Nav({
                 <Menu.Item key="/sell" icon={<MoneyCollectOutlined />}>
                   <Link to="/sell">Sell</Link>
                 </Menu.Item>
+                {!user && (
+                  <>
+                    <Menu.Item key="/login" icon={<LoginOutlined />}>
+                      <Link to="/login">LogIn or SignUp</Link>
+                    </Menu.Item>
+                  </>
+                )}
               </Menu>
             </Drawer>
           </Col>
           <Col xs={10} sm={12} md={14} lg={15} xl={16}>
-            <div />
+            <SearchBar />
           </Col>
           <Col xs={8} sm={8} md={6} lg={5} xl={4}>
             <Space>

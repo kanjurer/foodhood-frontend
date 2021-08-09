@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { IDish, IFoodItem } from '../Interfaces';
+import axios, { AxiosResponse } from 'axios';
+import { IDish, IFoodItem, IUser } from '../Interfaces';
 
 import {
   IEditedNameOfUser,
@@ -11,7 +11,9 @@ import {
 axios.defaults.headers['Content-Type'] = 'application/json; charset=UTF-8';
 axios.defaults.withCredentials = true;
 
-export async function signUpUser(values: SignUpState) {
+export async function signUpUser(
+  values: SignUpState
+): Promise<AxiosResponse<string>> {
   return await axios({
     url: '/signup',
     method: 'POST',
@@ -19,21 +21,26 @@ export async function signUpUser(values: SignUpState) {
   });
 }
 
-export async function getFoods() {
+export async function getFoods(
+  pageNumber: number
+): Promise<AxiosResponse<IFoodItem[]>> {
   return await axios({
-    url: '/foods',
+    url: `/foods`,
     method: 'GET',
+    params: { page: pageNumber, limit: 10 },
   });
 }
 
-export async function getFoodItem(id: string) {
+export async function getFoodItem(
+  id: string
+): Promise<AxiosResponse<IFoodItem>> {
   return await axios({
     url: `/foods/${id}`,
     method: 'GET',
   });
 }
 
-export async function getAuthenticatedUser() {
+export async function getAuthenticatedUser(): Promise<AxiosResponse<IUser>> {
   return await axios({
     url: '/user',
     method: 'GET',
@@ -55,10 +62,13 @@ export async function changePasswordOfUser(user: IEditedPassword) {
   });
 }
 
-export async function getChefFoods() {
+export async function getChefFoods(
+  pageNumber: number
+): Promise<AxiosResponse<IFoodItem[]>> {
   return await axios({
     url: '/chefPosts',
     method: 'GET',
+    params: { page: pageNumber, limit: 10 },
   });
 }
 

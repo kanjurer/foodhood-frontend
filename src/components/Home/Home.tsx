@@ -1,37 +1,39 @@
 import { useEffect, useState } from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, Spin } from 'antd';
 
 import { ICartItem, IFoodItem } from '../../Interfaces';
 import FoodItem from '../FoodItem/FoodItem';
 import { getFoods } from '../../fetchAPIs/fetchAPIs';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { usePaginateData } from '../../paginateData/paginateData';
 
-export default function Home(props: HomeProps) {
-  let [foods, setFoods] = useState<IFoodItem[]>([]);
+export default function Home({ handleAddToCart }: HomeProps) {
+  let [foods, fetchData, hasMore] = usePaginateData<IFoodItem>(getFoods);
 
-  async function fetchData() {
-    getFoods()
-      .then((res) => {
-        setFoods(res.data);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
-  }
   useEffect(() => {
     fetchData();
   }, []);
-
-  const { handleAddToCart } = props;
-
   return (
     <>
-      <Row justify="center">
-        {foods?.map((foodItem) => (
-          <Col flex="350px" key={foodItem._id}>
-            <FoodItem food={foodItem} handleAddToCart={handleAddToCart} />
-          </Col>
-        ))}
-      </Row>
+      <InfiniteScroll
+        dataLength={foods.length}
+        next={fetchData}
+        hasMore={hasMore}
+        loader={<Spin />}
+        endMessage={
+          <p style={{ textAlign: 'center' }}>
+            <b>Yay! You have seen it all</b>
+          </p>
+        }
+      >
+        <Row justify="center">
+          {foods.map((foodItem: any) => (
+            <Col flex="350px" key={foodItem._id}>
+              <FoodItem food={foodItem} handleAddToCart={handleAddToCart} />
+            </Col>
+          ))}
+        </Row>
+      </InfiniteScroll>
     </>
   );
 }

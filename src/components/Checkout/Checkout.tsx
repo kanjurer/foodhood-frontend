@@ -1,27 +1,62 @@
-import { Empty } from 'antd';
+import { Button, Empty, Table } from 'antd';
 
 import { ICartItem } from '../../Interfaces';
 import { getFoodItem } from '../../fetchAPIs/fetchAPIs';
 import { calculateTotalOfCart } from '../Cart/Cart';
-import CartItem from '../Cart/CartItem';
+import { calculateCost } from '../../cartOperations/cartOperations';
 
 export default function Checkout({
   cart,
   handleRemoveFromCart,
 }: CheckoutProps) {
+  const columns = [
+    {
+      title: 'Quantity',
+      dataIndex: 'buyQuantity',
+      key: 'buyQuantity',
+    },
+    {
+      title: 'Name Of Dish',
+      dataIndex: 'nameOfDish',
+      key: 'nameOfDish',
+    },
+    {
+      title: 'Total Cost',
+      dataIndex: 'totalCost',
+      key: 'totalCost',
+    },
+    {
+      title: '',
+      dataIndex: 'removeItem',
+      key: 'removeItem',
+    },
+  ];
+  const dataSource = cart.map((cartItem) => {
+    return {
+      buyQuantity: 'x ' + cartItem.buyQuantity,
+      nameOfDish: cartItem.nameOfDish,
+      totalCost: '$' + calculateCost(cartItem),
+      removeItem: (
+        <Button type="link" onClick={() => handleRemoveFromCart(cartItem)}>
+          Remove
+        </Button>
+      ),
+    };
+  });
   return (
     <>
       <h1>Checkout</h1>
 
       <div>
         {cart.length !== 0 ? (
-          cart.map((cartItem) => (
-            <CartItem
-              cartItem={cartItem}
-              handleRemoveFromCart={handleRemoveFromCart}
-              key={cartItem._id}
-            />
-          ))
+          <Table
+            pagination={false}
+            size="small"
+            dataSource={dataSource}
+            columns={columns}
+            style={{ width: '45%' }}
+            footer={() => <b>Total: {'$' + calculateTotalOfCart(cart)}</b>}
+          />
         ) : (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -29,7 +64,6 @@ export default function Checkout({
           />
         )}
       </div>
-      <div>Total: {calculateTotalOfCart(cart)}</div>
     </>
   );
 }

@@ -2,6 +2,7 @@ import './CartItem.css';
 import { Button, Row, Col, Typography } from 'antd';
 
 import { ICartItem } from '../../Interfaces';
+import { calculateCost } from '../../cartOperations/cartOperations';
 
 export default function CartItem({
   cartItem,
@@ -10,8 +11,10 @@ export default function CartItem({
   return (
     <div className="cart-item">
       <Row>
-        <Col span={4}> x {cartItem.buyQuantity}</Col>
-        <Col span={10}>
+        <Col flex="50px">
+          <b>x {cartItem.buyQuantity}</b>
+        </Col>
+        <Col flex="120px">
           <Typography.Title level={5} ellipsis={true}>
             {cartItem.nameOfDish}
           </Typography.Title>
@@ -21,7 +24,7 @@ export default function CartItem({
           </Button>
         </Col>
 
-        <Col span={10}>
+        <Col flex="auto">
           <Typography>$ {calculateCost(cartItem)}</Typography>
         </Col>
       </Row>
@@ -32,8 +35,4 @@ export default function CartItem({
 interface CartItemProps {
   cartItem: ICartItem;
   handleRemoveFromCart: (cartItem: ICartItem) => void;
-}
-
-function calculateCost(cartItem: ICartItem): number {
-  return Math.round(cartItem.buyQuantity * cartItem.priceInCad * 100) / 100;
 }

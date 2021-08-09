@@ -22,7 +22,7 @@ import Settings from './components/Settings/Settings';
 import {
   handleAddToCart,
   handleRemoveFromCart,
-} from './components/CartOperations/CartOperations';
+} from './cartOperations/cartOperations';
 import { getAuthenticatedUser } from './fetchAPIs/fetchAPIs';
 
 export function userSetter(): IUser | null {
@@ -97,10 +97,8 @@ function MyApp({
             />
           </Layout.Header>
           <Layout.Content
-            className="content"
             style={{
-              padding: ' 10px',
-              margin: '10px',
+              padding: ' 15px',
               backgroundColor: 'white',
             }}
           >

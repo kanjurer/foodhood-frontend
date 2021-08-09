@@ -1,7 +1,7 @@
 import './Sell.css';
 
 import { useState, useEffect, useContext } from 'react';
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Row, Spin } from 'antd';
 import { AppstoreAddOutlined } from '@ant-design/icons';
 
 import { UserContext } from '../../Context';
@@ -11,6 +11,8 @@ import CreateFoodModal from './CreateFoodModal';
 import BecomeAChef from './BecomeAChef';
 import { getChefFoods } from '../../fetchAPIs/fetchAPIs';
 import { handleAlert } from '../../messageHandler/messageHandler';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { usePaginateData } from '../../paginateData/paginateData';
 
 export default function Sell({
   logInFunction,
@@ -30,18 +32,11 @@ export function SellApp({
   logInFunction: (login: boolean) => void;
 }) {
   let [visible, handleShowSell, handleHide] = useVisible();
-  let [chefFoods, setChefFoods] = useState<IFoodItem[]>([]);
+  let [chefFoods, fetchChefData, hasMore] = usePaginateData<IFoodItem>(
+    getChefFoods,
+    () => logInFunction(false)
+  );
 
-  async function fetchChefData() {
-    getChefFoods()
-      .then((res) => {
-        setChefFoods(res.data);
-      })
-      .catch((err) => {
-        logInFunction(false);
-        console.log(err.response.data);
-      });
-  }
   useEffect(() => {
     fetchChefData();
   }, []);
@@ -63,18 +58,30 @@ export function SellApp({
         handleHide={handleHide}
         fetchChefData={fetchChefData}
       />
-      <Row justify="center">
-        {chefFoods?.map((foodItem) => (
-          <Col flex="350px" key={foodItem._id}>
-            <ChefItem
-              handleAlert={handleAlert}
-              food={foodItem}
-              fetchChefData={fetchChefData}
-              key={foodItem._id}
-            />
-          </Col>
-        ))}
-      </Row>
+      <InfiniteScroll
+        dataLength={chefFoods.length}
+        next={fetchChefData}
+        hasMore={hasMore}
+        loader={<Spin />}
+        endMessage={
+          <p style={{ textAlign: 'center' }}>
+            <b>Yay! You have seen it all</b>
+          </p>
+        }
+      >
+        <Row justify="center">
+          {chefFoods?.map((foodItem) => (
+            <Col flex="350px" key={foodItem._id}>
+              <ChefItem
+                handleAlert={handleAlert}
+                food={foodItem}
+                fetchChefData={fetchChefData}
+                key={foodItem._id}
+              />
+            </Col>
+          ))}
+        </Row>
+      </InfiniteScroll>
     </>
   );
 }

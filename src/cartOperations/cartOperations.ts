@@ -1,4 +1,4 @@
-import { ICartItem } from '../../Interfaces';
+import { ICartItem } from '../Interfaces';
 
 export function handleRemoveFromCart(
   cart: ICartItem[],
@@ -37,4 +37,8 @@ export function handleAddToCart(
   };
 
   callback(cartCopy);
+}
+
+export function calculateCost(cartItem: ICartItem): number {
+  return Math.round(cartItem.buyQuantity * cartItem.priceInCad * 100) / 100;
 }
