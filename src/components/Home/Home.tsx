@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Row, Col, Spin } from 'antd';
+import { Row, Col, Spin, Skeleton } from 'antd';
 
 import { ICartItem, IFoodItem } from '../../Interfaces';
 import FoodItem from '../FoodItem/FoodItem';
@@ -15,6 +15,12 @@ export default function Home({ handleAddToCart }: HomeProps) {
   }, []);
   return (
     <>
+      {foods.length === 0 && (
+        <>
+          <Skeleton /> <Skeleton />
+          <Skeleton /> <Skeleton /> <Skeleton />
+        </>
+      )}
       <InfiniteScroll
         dataLength={foods.length}
         next={fetchData}

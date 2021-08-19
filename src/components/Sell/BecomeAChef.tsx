@@ -1,3 +1,10 @@
+import { Typography } from 'antd';
+
 export default function BecomeAChef() {
-  return <h1>afnkasfasfas</h1>;
+  return (
+    <>
+      <Typography.Title>Become A Chef</Typography.Title>
+      <br />
+    </>
+  );
 }

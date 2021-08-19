@@ -4,7 +4,7 @@ export default function SearchBar() {
   return (
     <Input.Group>
       <Input.Search
-        placeholder="input search text"
+        placeholder="Search for Foods"
         allowClear={true}
         style={{ marginTop: '15px', width: '60%' }}
       />

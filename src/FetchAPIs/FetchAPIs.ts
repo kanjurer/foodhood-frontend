@@ -1,11 +1,13 @@
 import axios, { AxiosResponse } from 'axios';
-import { IDish, IFoodItem, IUser } from '../Interfaces';
 
 import {
   IEditedNameOfUser,
   IEditedPassword,
   LogInState,
   SignUpState,
+  IDish,
+  IFoodItem,
+  IUser,
 } from '../Interfaces';
 
 axios.defaults.headers['Content-Type'] = 'application/json; charset=UTF-8';
@@ -46,19 +48,25 @@ export async function getAuthenticatedUser(): Promise<AxiosResponse<IUser>> {
     method: 'GET',
   });
 }
-export async function changeNameOfUser(user: IEditedNameOfUser) {
+export async function changeNameOfUser(
+  user: IEditedNameOfUser
+): Promise<AxiosResponse<string>> {
   return await axios({
-    url: '/user/nameOfUser',
+    url: '/user',
     method: 'PUT',
     data: user,
+    params: { nameOfUser: true },
   });
 }
 
-export async function changePasswordOfUser(user: IEditedPassword) {
+export async function changePasswordOfUser(
+  user: IEditedPassword
+): Promise<AxiosResponse<string>> {
   return await axios({
-    url: '/user/password',
+    url: '/user',
     method: 'PUT',
     data: user,
+    params: { nameOfUser: true },
   });
 }
 
@@ -72,7 +80,9 @@ export async function getChefFoods(
   });
 }
 
-export async function postChefFood(dish: IDish) {
+export async function postChefFood(
+  dish: IDish
+): Promise<AxiosResponse<string>> {
   const form = new FormData();
   Object.keys(dish).forEach((key) => {
     form.append(key, (dish as any)[key]);
@@ -89,14 +99,19 @@ export async function postChefFood(dish: IDish) {
   });
 }
 
-export async function deleteChefFood(id: string) {
+export async function deleteChefFood(
+  id: string
+): Promise<AxiosResponse<string>> {
   return await axios({
     url: `/chefPosts/${id}`,
     method: 'DELETE',
   });
 }
 
-export async function updateChefFood(id: string, food: IDish) {
+export async function updateChefFood(
+  id: string,
+  food: IDish
+): Promise<AxiosResponse<string>> {
   const form = new FormData();
   Object.keys(food).forEach((key) => {
     form.append(key, (food as any)[key]);
@@ -113,7 +128,9 @@ export async function updateChefFood(id: string, food: IDish) {
   });
 }
 
-export async function logInUser(values: LogInState) {
+export async function logInUser(
+  values: LogInState
+): Promise<AxiosResponse<string>> {
   return await axios({
     url: '/login',
     method: 'POST',
@@ -122,7 +139,7 @@ export async function logInUser(values: LogInState) {
   });
 }
 
-export async function logOutUser() {
+export async function logOutUser(): Promise<AxiosResponse<string>> {
   return await axios({
     url: '/logout',
     method: 'POST',

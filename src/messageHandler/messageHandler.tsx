@@ -1,6 +1,9 @@
 import { message } from 'antd';
 
-export const handleAlert = (type: MessageType, messageText: string): void => {
+export const handleAlert: HandleAlert = (
+  type: MessageType,
+  messageText: string
+): void => {
   message[type](messageText);
 };
 

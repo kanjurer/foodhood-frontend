@@ -11,6 +11,12 @@ import { Layout } from 'antd';
 
 import { UserContext } from './Context';
 import { ICartItem, IUser } from './Interfaces';
+import { getAuthenticatedUser } from './fetchAPIs/fetchAPIs';
+import {
+  handleAddToCart,
+  handleRemoveFromCart,
+} from './cartOperations/cartOperations';
+import { handleAlert } from './messageHandler/messageHandler';
 import Nav from './components/Nav/Nav';
 import Home from './components/Home/Home';
 import Sell from './components/Sell/Sell';
@@ -19,11 +25,6 @@ import LogIn from './components/UserEntry/LogIn';
 import SignUp from './components/UserEntry/SignUp';
 import Checkout from './components/Checkout/Checkout';
 import Settings from './components/Settings/Settings';
-import {
-  handleAddToCart,
-  handleRemoveFromCart,
-} from './cartOperations/cartOperations';
-import { getAuthenticatedUser } from './fetchAPIs/fetchAPIs';
 
 export function userSetter(): IUser | null {
   const userString: string | null = localStorage.getItem('user');
@@ -46,7 +47,7 @@ export default function App() {
         .catch((err) => {
           localStorage.removeItem('user');
           setSignedInUser(null);
-          console.log(err.response.text);
+          handleAlert('error', err.response.data);
         });
     } else {
       localStorage.removeItem('user');
@@ -56,20 +57,14 @@ export default function App() {
 
   return (
     <UserContext.Provider value={signedInUser}>
-      <MyApp setSignedInUser={setSignedInUser} logInFunction={logInFunction} />
+      <MyApp logInFunction={logInFunction} />
     </UserContext.Provider>
   );
 }
 
-function MyApp({
-  logInFunction,
-  setSignedInUser,
-}: {
-  logInFunction: (login: boolean) => void;
-  setSignedInUser: Dispatch<SetStateAction<IUser | null>>;
-}) {
+function MyApp({ logInFunction }: MyAppProps) {
   const user = useContext(UserContext);
-  let loggedIn = Boolean(user);
+  const loggedIn = Boolean(user);
 
   let [cart, setCart] = useState<ICartItem[]>(
     localStorage.getItem('cart') !== null
@@ -98,7 +93,7 @@ function MyApp({
           </Layout.Header>
           <Layout.Content
             style={{
-              padding: ' 15px',
+              padding: '15px',
               backgroundColor: 'white',
             }}
           >
@@ -157,7 +152,7 @@ function MyApp({
                 {!loggedIn ? (
                   <Redirect to="/login" />
                 ) : (
-                  <Settings setSignedInUser={setSignedInUser} />
+                  <Settings logInFunction={logInFunction} />
                 )}
               </Route>
             </Switch>
@@ -166,4 +161,8 @@ function MyApp({
       </Router>
     </>
   );
+}
+
+interface MyAppProps {
+  logInFunction: (login: boolean) => void;
 }

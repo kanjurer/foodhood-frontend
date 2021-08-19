@@ -1,13 +1,12 @@
 import './Settings.css';
 
 import * as Yup from 'yup';
-import { Dispatch, SetStateAction, useContext } from 'react';
+import { useContext } from 'react';
 
 import { UserContext } from '../../Context';
 import { Typography, Collapse } from 'antd';
 import { Formik } from 'formik';
 import { Form, Input, SubmitButton } from 'formik-antd';
-import { IUser } from '../../Interfaces';
 
 import {
   changeNameOfUser,
@@ -16,32 +15,30 @@ import {
 import { handleAlert } from '../../messageHandler/messageHandler';
 
 export default function Settings({
-  setSignedInUser,
+  logInFunction,
 }: {
-  setSignedInUser: Dispatch<SetStateAction<IUser | null>>;
+  logInFunction: (val: boolean) => void;
 }) {
   const user = useContext(UserContext);
 
   if (user === null) return <h1>Not allowed</h1>;
 
-  const handleNameOfUserPut = async (editedUserInfo: IEditedNameOfUser) => {
+  const handleNameOfUserPut = (editedUserInfo: IEditedNameOfUser) => {
     changeNameOfUser(editedUserInfo)
       .then((res) => {
-        handleAlert('success', 'Your name has been updated sucessfully!');
-        localStorage.setItem('user', JSON.stringify(res.data));
-        setSignedInUser(res.data);
+        handleAlert('success', res.data);
+        logInFunction(true);
       })
       .catch((err) => {
         handleAlert('error', err.response.data);
       });
   };
 
-  const handlePasswordPut = async (editedUserInfo: IEditedPassword) => {
+  const handlePasswordPut = (editedUserInfo: IEditedPassword) => {
     changePasswordOfUser(editedUserInfo)
       .then((res) => {
-        handleAlert('success', 'Your password has been updated sucessfully!');
-        localStorage.setItem('user', JSON.stringify(res.data));
-        setSignedInUser(res.data);
+        handleAlert('success', res.data);
+        logInFunction(true);
       })
       .catch((err) => {
         handleAlert('error', err.response.data);
